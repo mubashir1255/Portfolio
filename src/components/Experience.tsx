@@ -1,7 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
-
 const timeline = [
   {
     year: "2023",
@@ -36,23 +34,17 @@ export default function Experience() {
       className="bg-zinc-950 px-6 py-24 text-white"
     >
       <div className="mx-auto max-w-5xl">
-
         <h2 className="mb-16 text-center text-5xl font-bold">
           My Journey
         </h2>
 
         <div className="space-y-10">
-
-          {timeline.map((item, index) => (
-            <motion.div
+          {timeline.map((item) => (
+            <div
               key={item.year}
-              initial={{ opacity: 0, x: -40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.15 }}
-              viewport={{ once: true }}
               className="rounded-2xl border border-zinc-800 bg-zinc-900 p-8"
             >
-              <p className="text-blue-400 font-semibold">
+              <p className="font-semibold text-blue-400">
                 {item.year}
               </p>
 
@@ -60,13 +52,11 @@ export default function Experience() {
                 {item.title}
               </h3>
 
-              <p className="mt-3 text-gray-400 leading-7">
+              <p className="mt-3 leading-7 text-gray-400">
                 {item.description}
               </p>
-
-            </motion.div>
+            </div>
           ))}
-
         </div>
       </div>
     </section>

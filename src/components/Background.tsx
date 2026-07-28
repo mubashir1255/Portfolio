@@ -40,7 +40,7 @@ export default function Background() {
           duration: 14,
           repeat: Infinity,
         }}
-        className="absolute left-1/2 top-1/2 h-112.5 w-112.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-500/10 blur-[180px]"
+        className="absolute left-1/2 top-1/2 h-[450px] w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-500/10 blur-[180px]"
       />
 
     </div>

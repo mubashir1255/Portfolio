@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 
+
 const projects = [
   {
     title: "Developer Portfolio",
@@ -28,9 +29,12 @@ export default function Projects() {
   return (
     <section id="projects" className="bg-black py-28 text-white">
       <div className="mx-auto max-w-7xl px-6">
-        <h2 className="text-center text-5xl font-bold">
-          Featured Projects
-        </h2>
+        <h2 className="text-center text-5xl font-extrabold">
+  Featured{" "}
+  <span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">
+    Projects
+  </span>
+</h2>
 
         <p className="mx-auto mt-5 max-w-2xl text-center text-gray-400">
           Some projects I&apos;ve built while learning full-stack development.
@@ -42,14 +46,14 @@ export default function Projects() {
               key={project.title}
               whileHover={{ y: -8 }}
               transition={{ duration: 0.3 }}
-              className="overflow-hidden rounded-3xl border border-white/10 bg-zinc-900"
+              className="overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl transition duration-300 hover:border-blue-500/40 hover:shadow-2xl hover:shadow-blue-500/10"
             >
               <div className="relative h-64">
                 <Image
                   src={project.image}
                   alt={project.title}
                   fill
-                  className="object-cover transition duration-500 hover:scale-105"
+                  className="object-cover transition duration-700 hover:scale-110"
                 />
               </div>
 
@@ -78,14 +82,16 @@ export default function Projects() {
                     href={project.github}
                     target="_blank"
                     rel="noreferrer"
-                    className="rounded-xl border border-gray-600 px-6 py-3 transition hover:border-blue-500"
+                    className="rounded-xl border border-gray-600 px-6 py-3 transition hover:border-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                    aria-label={`View ${project.title} source code on GitHub`}
                   >
                     GitHub
                   </a>
 
                   <a
                     href={project.demo}
-                    className="rounded-xl bg-blue-600 px-6 py-3 font-semibold transition hover:bg-blue-500"
+                    className="rounded-xl bg-blue-600 px-6 py-3 font-semibold transition hover:bg-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                    aria-label={`View ${project.title} live demo`}
                   >
                     Live Demo
                   </a>

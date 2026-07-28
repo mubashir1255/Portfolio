@@ -14,15 +14,15 @@ export default function Hero() {
           Welcome
         </p>
 
-        <h1 className="mt-4 text-6xl font-extrabold leading-tight md:text-7xl">
+        <h1 className="mt-4 text-4xl font-extrabold leading-tight sm:text-6xl md:text-7xl">
           Hello, I&apos;m{" "}
-          <span className="bg-linear-to-r from-blue-500 via-cyan-400 to-blue-300 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-300 bg-clip-text text-transparent">
             Mubashir
           </span>{" "}
-          👋
+          
         </h1>
 
-        <h2 className="mt-6 text-2xl text-gray-300">
+        <h2 className="mt-6 text-xl text-gray-300 sm:text-2xl">
           IT Student • Full Stack Developer • Cloud Enthusiast
         </h2>
 
@@ -34,11 +34,19 @@ export default function Hero() {
         </p>
 
         <div className="mt-10 flex justify-center gap-4">
-          <button className="rounded-xl bg-blue-600 px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:bg-blue-500 hover:shadow-xl hover:shadow-blue-500/40">
+          <button 
+            className="rounded-xl bg-blue-600 px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:bg-blue-500 hover:shadow-xl hover:shadow-blue-500/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            aria-label="Scroll to projects"
+            onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
+          >
             View Projects
           </button>
 
-          <button className="rounded-xl border border-gray-600 px-7 py-3 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 hover:bg-gray-900">
+          <button 
+            className="rounded-xl border border-gray-600 px-7 py-3 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 hover:bg-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            aria-label="Scroll to contact section"
+            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+          >
             Contact Me
           </button>
         </div>
@@ -48,7 +56,8 @@ export default function Hero() {
             href="https://github.com/mubashir1255"
             target="_blank"
             rel="noreferrer"
-            className="transition hover:text-blue-400"
+            className="transition hover:text-blue-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md px-1"
+            aria-label="GitHub Profile"
           >
             GitHub
           </a>
@@ -57,7 +66,8 @@ export default function Hero() {
             href="https://www.linkedin.com/"
             target="_blank"
             rel="noreferrer"
-            className="transition hover:text-blue-400"
+            className="transition hover:text-blue-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md px-1"
+            aria-label="LinkedIn Profile"
           >
             LinkedIn
           </a>

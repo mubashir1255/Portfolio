@@ -13,15 +13,17 @@ export default function Home() {
     <>
       <Background />
       <MouseGlow />
+
       <Navbar />
-      <Hero />
-      <TechStack />
-      <About />
-      <Projects />
-      <Experience />
-      <Contacts />
+      <main id="main-content">
+        <Hero />
+        <TechStack />
+        <About />
+        <Projects />
+        <Experience />
+        <Contacts />
+      </main>
       <Footer />
-      
     </>
   );
 }
