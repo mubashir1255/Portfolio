@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://your-portfolio-domain.com/sitemap.xml
+Sitemap: https://mubashir1255.github.io/portfolio/sitemap.xml

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
 
@@ -43,7 +45,7 @@ export default function Navbar() {
 
           {/* Desktop Resume */}
           <a
-            href="/Mubashir_Fayyaz_Resume.pdf"
+            href={`${basePath}/Mubashir_Fayyaz_Resume.pdf`}
             download
             className="hidden rounded-xl bg-blue-600 px-5 py-2 font-semibold text-white transition duration-300 hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-500/40 md:block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
           >
@@ -107,7 +109,7 @@ export default function Navbar() {
             </a>
 
             <a
-              href="/Mubashir_Fayyaz_Resume.pdf"
+              href={`${basePath}/Mubashir_Fayyaz_Resume.pdf`}
               download
               onClick={() => setOpen(false)}
               className="rounded-xl bg-blue-600 px-5 py-3 text-center font-semibold text-white transition hover:bg-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"

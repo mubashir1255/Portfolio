@@ -3,6 +3,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  "https://mubashir1255.github.io/portfolio";
 
 export const metadata: Metadata = {
   title: "Mubashir | Full Stack Developer Portfolio",
@@ -12,7 +15,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Mubashir | Full Stack Developer Portfolio",
     description: "Personal portfolio showcasing modern web applications built with Next.js and Cloud technologies.",
-    url: "https://your-portfolio-domain.com", // Update with your actual domain
+    url: siteUrl,
     siteName: "Mubashir Portfolio",
     locale: "en_US",
     type: "website",

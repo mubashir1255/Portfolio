@@ -3,13 +3,14 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 const projects = [
   {
     title: "Developer Portfolio",
     description:
       "A modern portfolio built with Next.js, Tailwind CSS, Framer Motion, and TypeScript.",
-    image: "/projects/portfolio.png",
+    image: `${basePath}/projects/portfolio.png`,
     tech: ["Next.js", "React", "Tailwind", "Framer Motion"],
     github: "https://github.com/mubashir1255",
     demo: "#",
@@ -18,7 +19,7 @@ const projects = [
     title: "AgroBid Pakistan",
     description:
       "A real-time agriculture marketplace connecting farmers and buyers through live auctions.",
-    image: "/projects/portfolio.png", // Replace later with agrobid.png
+    image: `${basePath}/projects/portfolio.png`, // Replace later with agrobid.png
     tech: ["Next.js", "Prisma", "PostgreSQL", "AWS"],
     github: "https://github.com/mubashir1255",
     demo: "#",

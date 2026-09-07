@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, type Variants } from "framer-motion";
 import { Code2, Cloud, BrainCircuit, Rocket } from "lucide-react";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
@@ -88,7 +88,7 @@ const containerVariants = {
   },
 };
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 32 },
   visible: {
     opacity: 1,
