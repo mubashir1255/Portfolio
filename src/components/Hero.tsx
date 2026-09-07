@@ -63,13 +63,23 @@ export default function Hero() {
           </a>
 
           <a
-            href="https://www.linkedin.com/"
+            href="https://www.linkedin.com/in/mubashir-fayyaz-48b4b32b9"
             target="_blank"
             rel="noreferrer"
             className="transition hover:text-blue-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md px-1"
             aria-label="LinkedIn Profile"
           >
             LinkedIn
+          </a>
+
+          <a
+            href="https://www.instagram.com/mubashirfayyaz.1"
+            target="_blank"
+            rel="noreferrer"
+            className="transition hover:text-blue-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md px-1"
+            aria-label="Instagram Profile"
+          >
+            Instagram
           </a>
         </div>
 
