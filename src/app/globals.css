@@ -130,3 +130,13 @@ html {
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .bg-clip-text {
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+}

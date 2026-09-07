@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 export default function Hero() {
   return (
-    <section className="min-h-screen bg-black pt-24 text-white flex items-center justify-center px-6">
+    <section className="min-h-screen bg-black pt-28 pb-16 sm:pt-32 text-white flex items-center justify-center px-6">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -16,10 +16,9 @@ export default function Hero() {
 
         <h1 className="mt-4 text-4xl font-extrabold leading-tight sm:text-6xl md:text-7xl">
           Hello, I&apos;m{" "}
-          <span className="bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-300 bg-clip-text text-transparent">
+          <span className="inline-block bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-300 bg-clip-text text-transparent box-decoration-clone">
             Mubashir
-          </span>{" "}
-          
+          </span>
         </h1>
 
         <h2 className="mt-6 text-xl text-gray-300 sm:text-2xl">
@@ -33,9 +32,9 @@ export default function Hero() {
           continuously learning new technologies.
         </p>
 
-        <div className="mt-10 flex justify-center gap-4">
+        <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
           <button 
-            className="rounded-xl bg-blue-600 px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:bg-blue-500 hover:shadow-xl hover:shadow-blue-500/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="rounded-xl bg-blue-600 px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:bg-blue-500 hover:shadow-xl hover:shadow-blue-500/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 w-full sm:w-auto"
             aria-label="Scroll to projects"
             onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
           >
@@ -43,7 +42,7 @@ export default function Hero() {
           </button>
 
           <button 
-            className="rounded-xl border border-gray-600 px-7 py-3 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 hover:bg-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="rounded-xl border border-gray-600 px-7 py-3 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 hover:bg-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 w-full sm:w-auto"
             aria-label="Scroll to contact section"
             onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
           >

@@ -29,7 +29,7 @@ export default function TechStack() {
           className="mb-4 text-center text-5xl font-extrabold"
         >
           Tech{" "}
-          <span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">
+          <span className="inline-block bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent box-decoration-clone">
             Stack
           </span>
         </motion.h2>

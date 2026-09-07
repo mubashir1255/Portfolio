@@ -32,7 +32,7 @@ export default function Projects() {
       <div className="mx-auto max-w-7xl px-6">
         <h2 className="text-center text-5xl font-extrabold">
   Featured{" "}
-  <span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">
+  <span className="inline-block bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent box-decoration-clone">
     Projects
   </span>
 </h2>

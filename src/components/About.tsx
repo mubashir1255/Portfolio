@@ -123,7 +123,7 @@ export default function About() {
           </p>
           <h2 className="text-4xl font-extrabold sm:text-5xl">
             About{" "}
-            <span className="bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-300 bg-clip-text text-transparent">
+            <span className="inline-block bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-300 bg-clip-text text-transparent box-decoration-clone">
               Me
             </span>
           </h2>
@@ -201,7 +201,7 @@ export default function About() {
               className="flex flex-col items-center justify-center gap-1 bg-black px-6 py-10
                          transition-colors duration-300 hover:bg-white/[0.03]"
             >
-              <span className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+              <span className="inline-block text-4xl font-extrabold tracking-tight bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent box-decoration-clone">
                 <Counter target={stat.value} suffix={stat.suffix} />
               </span>
               <span className="mt-1 text-sm text-gray-500 tracking-wide">{stat.label}</span>

@@ -9,13 +9,13 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 z-50 w-full">
-      <div className="mx-auto mt-4 flex max-w-7xl items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-8 py-4 backdrop-blur-xl">
+    <header className="fixed top-0 left-0 z-50 w-full px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto mt-4 flex max-w-7xl items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-6 py-4 backdrop-blur-xl sm:px-8">
 
         {/* Logo */}
         <a
           href="#"
-          className="text-2xl font-extrabold tracking-wide text-white transition hover:text-blue-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg"
+          className="text-xl font-extrabold tracking-wide text-white transition hover:text-blue-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg sm:text-2xl"
           aria-label="Mubashir - Home"
         >
           MUBASHIR
@@ -33,6 +33,10 @@ export default function Navbar() {
 
           <a href="#projects" className="text-gray-300 transition hover:text-blue-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md px-1">
             Projects
+          </a>
+
+          <a href="#experience" className="text-gray-300 transition hover:text-blue-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md px-1">
+            Journey
           </a>
 
           <a href="#contact" className="text-gray-300 transition hover:text-blue-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md px-1">
@@ -68,13 +72,22 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {open && (
         <div 
-          className="fixed top-24 left-4 right-4 z-[100] rounded-2xl border border-white/10 bg-zinc-900/95 p-6 backdrop-blur-xl md:hidden"
+          className="fixed top-24 left-4 right-4 z-[100] rounded-2xl border border-white/10 bg-zinc-900/95 p-6 backdrop-blur-xl md:hidden shadow-2xl"
           role="dialog"
           aria-modal="true"
           aria-label="Mobile Navigation Menu"
         >
+          {/* Mobile Menu Header */}
+          <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
+            <span className="text-lg font-extrabold tracking-wide text-white">
+              MUBASHIR
+            </span>
+            <span className="rounded-full bg-blue-500/10 px-3 py-1 text-xs font-medium text-blue-400 border border-blue-500/20">
+              Full Stack Dev
+            </span>
+          </div>
 
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-5">
 
             <a
               href="#about"
@@ -98,6 +111,14 @@ export default function Navbar() {
               className="text-gray-300 transition hover:text-blue-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md px-1"
             >
               Projects
+            </a>
+
+            <a
+              href="#experience"
+              onClick={() => setOpen(false)}
+              className="text-gray-300 transition hover:text-blue-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-md px-1"
+            >
+              Journey
             </a>
 
             <a
