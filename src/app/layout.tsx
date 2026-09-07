@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ??
-  "https://mubashir1255.github.io/portfolio";
+  "https://mubashir1255.github.io/Portfolio";
 
 export const metadata: Metadata = {
   title: "Mubashir | Full Stack Developer Portfolio",
