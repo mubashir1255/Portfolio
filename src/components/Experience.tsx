@@ -23,7 +23,13 @@ const timeline = [
     year: "2026",
     title: "Built Qevora Technologies",
     description:
-      "Built and launched the Qevora Technologies agency website while continuing to create production-ready full stack applications and preparing for internships and software engineering roles.",
+      "Built and launched the Qevora Technologies agency website as part of my journey in creating production-ready digital experiences.",
+  },
+  {
+    year: "2026 - Now",
+    title: "Still Working on AgroBid Pakistan",
+    description:
+      "Continuing to develop AgroBid Pakistan while building production-ready full stack applications and preparing for internships and software engineering roles.",
   },
 ];
 
@@ -41,7 +47,7 @@ export default function Experience() {
         <div className="space-y-10">
           {timeline.map((item) => (
             <div
-              key={item.year}
+              key={`${item.year}-${item.title}`}
               className="rounded-2xl border border-zinc-800 bg-zinc-900 p-8"
             >
               <p className="font-semibold text-blue-400">
