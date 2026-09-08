@@ -12,7 +12,7 @@ const projects = [
       "A modern portfolio built with Next.js, Tailwind CSS, Framer Motion, and TypeScript.",
     image: `${basePath}/projects/portfolio.png`,
     tech: ["Next.js", "React", "Tailwind", "Framer Motion"],
-    github: "https://github.com/mubashir1255",
+    github: "https://github.com/mubashir1255/Portfolio",
     demo: "#",
   },
   {
