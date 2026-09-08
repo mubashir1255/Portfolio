@@ -22,14 +22,13 @@ export default function Hero() {
         </h1>
 
         <h2 className="mt-6 text-xl text-gray-300 sm:text-2xl">
-          IT Student • Full Stack Developer • Cloud Enthusiast
+          Full Stack Developer • Cloud & AI • Cybersecurity Enthusiast
         </h2>
 
         <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-gray-400">
-          I build fast, scalable, and modern web applications using Next.js,
-          React, TypeScript, Docker, PostgreSQL, and AWS. I&apos;m passionate
-          about creating software that solves real-world problems while
-          continuously learning new technologies.
+          I build secure, fast, and scalable web applications using Next.js,
+          React, TypeScript, Supabase, PostgreSQL, Docker, and AWS. Passionate
+          about AI automation, cloud computing, and seamless CI/CD deployments.
         </p>
 
         <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
@@ -89,10 +88,14 @@ export default function Hero() {
             "React",
             "TypeScript",
             "Tailwind CSS",
+            "Supabase",
+            "PostgreSQL",
             "Docker",
             "AWS",
-            "PostgreSQL",
-            "Prisma",
+            "AI Automation",
+            "Cybersecurity",
+            "Vercel",
+            "CI/CD",
           ].map((tech) => (
             <span
               key={tech}

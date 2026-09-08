@@ -8,13 +8,27 @@ const siteUrl =
   "https://mubashir1255.github.io/Portfolio";
 
 export const metadata: Metadata = {
-  title: "Mubashir | Full Stack Developer Portfolio",
-  description: "Explore the portfolio of Mubashir, a Full Stack Developer specializing in Next.js, React, TypeScript, and Cloud technologies.",
-  keywords: ["Mubashir", "Full Stack Developer", "Next.js", "React Portfolio", "Web Development", "AWS", "TypeScript"],
+  title: "Mubashir | Full Stack, Cloud & AI Developer",
+  description: "Explore the portfolio of Mubashir, a Full Stack Developer specializing in Next.js, React, Supabase, Cloud Computing, AI Automation, and Cybersecurity.",
+  keywords: [
+    "Mubashir",
+    "Full Stack Developer",
+    "Next.js",
+    "React Portfolio",
+    "Cloud Computing",
+    "AWS",
+    "Supabase",
+    "Cybersecurity",
+    "AI Automation",
+    "API Integration",
+    "Docker",
+    "Vercel",
+    "TypeScript",
+  ],
   authors: [{ name: "Mubashir" }],
   openGraph: {
-    title: "Mubashir | Full Stack Developer Portfolio",
-    description: "Personal portfolio showcasing modern web applications built with Next.js and Cloud technologies.",
+    title: "Mubashir | Full Stack, Cloud & AI Developer",
+    description: "Personal portfolio showcasing modern web applications, cloud architectures, and AI automations.",
     url: siteUrl,
     siteName: "Mubashir Portfolio",
     locale: "en_US",
@@ -22,8 +36,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mubashir | Full Stack Developer Portfolio",
-    description: "Personal portfolio showcasing modern web applications built with Next.js and Cloud technologies.",
+    title: "Mubashir | Full Stack, Cloud & AI Developer",
+    description: "Personal portfolio showcasing modern web applications, cloud architectures, and AI automations.",
   },
 };
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView, type Variants } from "framer-motion";
-import { Code2, Cloud, BrainCircuit, Rocket } from "lucide-react";
+import { Code2, Cloud, Sparkles, ShieldCheck } from "lucide-react";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -10,32 +10,32 @@ const highlights = [
   {
     icon: Code2,
     title: "Full Stack",
-    text: "Next.js · React · TypeScript",
+    text: "Next.js · React · Supabase",
     gradient: "from-blue-500 to-cyan-400",
   },
   {
     icon: Cloud,
-    title: "Cloud & DevOps",
-    text: "Docker · AWS · Linux",
+    title: "Cloud & Deployment",
+    text: "AWS · Docker · Vercel · CI/CD",
     gradient: "from-cyan-400 to-teal-400",
   },
   {
-    icon: BrainCircuit,
-    title: "AI Integration",
-    text: "Gemini API · AI Projects",
+    icon: Sparkles,
+    title: "AI Automation",
+    text: "Gemini API · API Integration",
     gradient: "from-violet-500 to-blue-500",
   },
   {
-    icon: Rocket,
-    title: "Goal",
-    text: "Software Engineer",
+    icon: ShieldCheck,
+    title: "Cybersecurity",
+    text: "Auth · API Security · Defense",
     gradient: "from-blue-400 to-indigo-500",
   },
 ];
 
 const stats = [
   { value: 20, suffix: "+", label: "Projects Built" },
-  { value: 12, suffix: "+", label: "Technologies" },
+  { value: 16, suffix: "+", label: "Technologies" },
   { value: 2023, suffix: "", label: "Started Coding" },
   { value: 100, suffix: "%", label: "Passion" },
 ];
@@ -140,10 +140,10 @@ export default function About() {
           transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
           className="mx-auto mt-8 max-w-2xl text-center text-lg leading-8 text-gray-400"
         >
-          I&apos;m an IT student passionate about building{" "}
-          <span className="text-white font-medium">beautiful, scalable applications</span>{" "}
-          that solve real-world problems. My interests span full‑stack development,
-          cloud computing, AI integration, and DevOps.
+          I&apos;m a developer passionate about building{" "}
+          <span className="text-white font-medium">secure, scalable, and modern applications</span>.
+          My expertise spans full-stack engineering, cloud computing, AI automation,
+          and cybersecurity.
         </motion.p>
 
         {/* ── Highlight Cards ── */}
