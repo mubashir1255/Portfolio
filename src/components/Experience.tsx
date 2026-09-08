@@ -21,9 +21,9 @@ const timeline = [
   },
   {
     year: "2026",
-    title: "Building Qevora Technologies, Portfolio & AgroBid Pakistan",
+    title: "Built Qevora Technologies",
     description:
-      "Built the Qevora Technologies agency website and continued creating production-ready full stack applications while preparing for internships and software engineering roles.",
+      "Built and launched the Qevora Technologies agency website while continuing to create production-ready full stack applications and preparing for internships and software engineering roles.",
   },
 ];
 
