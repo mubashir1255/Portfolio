@@ -24,6 +24,16 @@ const projects = [
     github: "https://github.com/mubashir1255",
     demo: "#",
   },
+  {
+    title: "Qevora Technologies",
+    description:
+      "A polished agency website for Qevora Technologies, presenting its services, work, and full-stack digital solutions.",
+    image: `${basePath}/projects/qevora-technologies.svg`,
+    tech: ["React", "TypeScript", "Tailwind CSS", "Motion"],
+    github:
+      "https://github.com/Qevora-Technologies/qevora-technologies.github.io",
+    demo: "https://qevora-technologies.github.io/",
+  },
 ];
 
 export default function Projects() {
