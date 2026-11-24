@@ -1,38 +1,36 @@
+# Mubashir — Portfolio
+
 https://mubashir1255.github.io/Portfolio/  click here to open my Portfolio
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Personal portfolio, presented as a book you page through. Built with **Astro**, **Tailwind CSS v4** and **anime.js v4**; fully static, about 56 KB of JS.
 
-## Getting Started
-
-First, run the development server:
+## Develop
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-run dev
+pnpm install
+pnpm dev        # http://localhost:3000
+pnpm build      # type-checks, then builds to ./dist
+pnpm preview
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `src/pages/index.astro`: the page; lists every book page in reading order
+- `src/components/book/`: one component per page (cover, contents, intro, about, skills, projects, journey, contact)
+- `src/data/content.ts`: all portfolio text (skills, projects, timeline, chapters); `src/data/site.ts`: email, socials, nav
+- `src/scripts/book.ts`: the book engine (spreads, page-curl turns, drag/swipe, keys, wheel, #chapter links)
+- `src/scripts/motion.ts`: anime.js extras (dot-grid ripples, cover title, ink reveals, counters)
+- `src/styles/global.css`: palette, paper and book styles
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Turn pages by clicking, dragging, swiping, arrow keys or the mouse wheel. Links like `#projects` open that chapter.
+Without JavaScript the pages stack vertically, and reduced-motion visitors get instant page changes.
 
-## Learn More
+To add a page, create a component in `src/components/book/`, wrap it in `<Page>`, and place it in `index.astro`.
+Keep the page count after the cover even so desktop spreads pair up.
 
-To learn more about Next.js, take a look at the following resources:
+## Deploy
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Pushing to `main` runs `.github/workflows/deploy-pages.yml`, which builds with
+`BASE_PATH=/Portfolio` and publishes to https://mubashir1255.github.io/Portfolio.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The contact form posts to Web3Forms. Set `PUBLIC_WEB3FORMS_ACCESS_KEY` in `.env.local` to override the default key.

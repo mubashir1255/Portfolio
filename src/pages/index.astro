@@ -1,0 +1,56 @@
+---
+import Base from '@/layouts/Base.astro';
+import Background from '@/components/Background.astro';
+import Navbar from '@/components/Navbar.astro';
+import CoverPage from '@/components/book/CoverPage.astro';
+import ContentsPage from '@/components/book/ContentsPage.astro';
+import IntroPage from '@/components/book/IntroPage.astro';
+import AboutPages from '@/components/book/AboutPages.astro';
+import SkillsPages from '@/components/book/SkillsPages.astro';
+import ProjectPage from '@/components/book/ProjectPage.astro';
+import JourneyPage from '@/components/book/JourneyPage.astro';
+import ContactPages from '@/components/book/ContactPages.astro';
+import MoreProjectsPage from '@/components/book/MoreProjectsPage.astro';
+import { projects } from '@/data/content';
+import { ChevronLeft, ChevronRight } from '@lucide/astro';
+---
+
+<Base>
+  <Background />
+  <Navbar />
+  <main id="main-content" class="book-main">
+    <!-- Interactive book (activated by src/scripts/book.ts) -->
+    <div class="book-root" id="book-root">
+      <button type="button" class="book-arrow" id="book-prev" aria-label="Previous page"><ChevronLeft class="h-6 w-6" /></button>
+      <div class="book-viewport" id="book-viewport">
+        <div class="book-scaler" id="book-scaler">
+          <div class="book" id="book"></div>
+        </div>
+      </div>
+      <button type="button" class="book-arrow" id="book-next" aria-label="Next page"><ChevronRight class="h-6 w-6" /></button>
+    </div>
+    <div class="book-controls">
+      <span class="book-label" id="book-label"></span>
+      <div class="book-dots" id="book-dots"></div>
+      <span class="book-keys">← → to turn</span>
+    </div>
+    <p id="book-status" class="sr-only" aria-live="polite"></p>
+
+    <!-- Every page, in reading order. Without JS these simply stack vertically. -->
+    <div class="book-store" id="book-pages">
+      <CoverPage />
+      <ContentsPage />
+      <IntroPage />
+      <AboutPages />
+      <SkillsPages />
+      {projects.map((p, i) => <ProjectPage p={p} index={i} num={6 + i} />)}
+      <MoreProjectsPage num={6 + projects.length} />
+      <JourneyPage />
+      <ContactPages />
+    </div>
+  </main>
+</Base>
+
+<script>
+  import '@/scripts/motion';
+</script>

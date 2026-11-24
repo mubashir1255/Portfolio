@@ -1,0 +1,56 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource-variable/fraunces';
+import '@/styles/global.css';
+import { withBase } from '@/lib';
+
+const title = 'Mubashir | Full Stack, Cloud & AI Developer';
+const description =
+  'Explore the portfolio of Mubashir, a Full Stack Developer specializing in Next.js, React, Supabase, Cloud Computing, AI Automation, and Cybersecurity.';
+const ogDescription =
+  'Personal portfolio showcasing modern web applications, cloud architectures, and AI automations.';
+const keywords = [
+  'Mubashir', 'Full Stack Developer', 'Next.js', 'React Portfolio', 'Cloud Computing', 'AWS',
+  'Supabase', 'Cybersecurity', 'AI Automation', 'API Integration', 'Docker', 'Vercel', 'TypeScript',
+].join(', ');
+const canonical = new URL(import.meta.env.BASE_URL, Astro.site).href;
+---
+
+<!doctype html>
+<html lang="en" class="dark scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+    <meta name="author" content="Mubashir" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={withBase('favicon.ico')} sizes="any" />
+    <link rel="sitemap" href={withBase('sitemap-index.xml')} />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={ogDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Mubashir Portfolio" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={ogDescription} />
+
+    <!-- Mark JS as available before first paint so reveal targets start hidden. -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
+  </head>
+  <body class="overflow-x-hidden font-sans antialiased">
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-md focus:bg-ember-600 focus:px-4 focus:py-2 focus:text-cream"
+    >
+      Skip to content
+    </a>
+
+
+    <slot />
+  </body>
+</html>

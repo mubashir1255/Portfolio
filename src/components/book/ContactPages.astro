@@ -1,0 +1,151 @@
+---
+import { Mail, Send, CircleCheck, CircleAlert, LoaderCircle, Copy, Check, MapPin, Clock } from '@lucide/astro';
+import Page from './Page.astro';
+import Kicker from './Kicker.astro';
+import { email, socials } from '@/data/site';
+
+// Web3Forms access keys are public by design (they can only send to the owner's inbox).
+const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || 'e9d46f6d-269e-455a-a5b0-76effdfb7724';
+const field =
+  'mt-1 w-full rounded-lg border border-sepia-300 bg-white/50 px-3 py-2 text-[14px] text-sepia-900 placeholder-sepia-500/70 transition focus:border-ember-500 focus:bg-white/80 focus:ring-2 focus:ring-ember-500/20 focus:outline-none';
+const label = 'block text-[11px] font-semibold tracking-wider text-sepia-700 uppercase';
+---
+
+<Page anchor="contact" chapter="Contact" num={14}>
+  <Kicker label="Chapter VI" right="Contact" />
+  <h2 class="pg-h2" data-a>Get in <em>touch</em></h2>
+  <div class="pg-rule" data-a></div>
+  <p class="mt-4 text-[14px] leading-6 text-sepia-700" data-a>
+    Open to internships, junior roles and freelance work. Email me or use the form.
+  </p>
+
+  <div class="mt-5 border-l-2 border-ember-500 pl-4" data-a>
+    <p class="font-serif text-[17px] text-sepia-900 italic">Currently available</p>
+    <p class="mt-1 text-[13px] leading-5 text-sepia-700">
+      Full-time junior positions, software engineering internships, and freelance full stack projects.
+    </p>
+  </div>
+
+  <ul class="mt-4 space-y-3 text-[13.5px]">
+    <li class="flex items-center justify-between gap-3" data-a>
+      <span class="flex min-w-0 items-center gap-3">
+        <Mail class="h-4 w-4 shrink-0 text-ember-600" />
+        <a href={`mailto:${email}`} class="ink-link truncate font-medium text-sepia-900">{email}</a>
+      </span>
+      <button type="button" id="copy-email" data-email={email} class="copy-btn" aria-label="Copy email address">
+        <span class="copy-idle flex items-center gap-1"><Copy class="h-3.5 w-3.5" />Copy</span>
+        <span class="copy-done hidden items-center gap-1 text-emerald-700"><Check class="h-3.5 w-3.5" />Copied</span>
+      </button>
+    </li>
+    <li class="flex items-center gap-3 text-sepia-900" data-a><MapPin class="h-4 w-4 text-ember-600" />Pakistan · Available for Worldwide Remote</li>
+    <li class="flex items-center gap-3 text-sepia-900" data-a><Clock class="h-4 w-4 text-ember-600" />Usually replies within 24 hours</li>
+  </ul>
+
+  <div class="mt-5 flex gap-2" data-a>
+    {socials.map((s) => <a href={s.href} target="_blank" rel="noreferrer" aria-label={s.aria} class="chip chip-link">{s.label}</a>)}
+  </div>
+</Page>
+
+<Page chapter="Contact" num={15} running={`© ${new Date().getFullYear()} Mubashir · Built with Astro & anime.js`}>
+  <Kicker label="Write to me" right="VI" />
+  <h2 class="pg-h2" data-a>Write to <em>me</em></h2>
+  <div class="pg-rule" data-a></div>
+  <p class="mt-3 text-[13px] text-sepia-700" data-a>Goes straight to my inbox.</p>
+
+  <div id="contact-success" class="mt-6 hidden rounded-xl border border-emerald-700/30 bg-emerald-50/60 p-6 text-center" role="status">
+    <CircleCheck class="mx-auto h-10 w-10 text-emerald-700" />
+    <h4 class="mt-3 font-serif text-2xl font-bold text-sepia-900">Message Sent Successfully!</h4>
+    <p class="mt-2 text-[13px] text-sepia-700">Thank you for reaching out. I'll reply to your email as soon as possible.</p>
+    <button type="button" id="contact-reset" class="btn-ink mt-5">Send Another Message</button>
+  </div>
+
+  <form id="contact-form" class="mt-5 space-y-3.5" data-access-key={accessKey} data-a>
+    <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
+    <div id="contact-error" class="hidden items-start gap-2 rounded-lg border border-rose-700/30 bg-rose-50/70 p-3 text-[12.5px] text-rose-900" role="alert">
+      <CircleAlert class="mt-0.5 h-4 w-4 shrink-0 text-rose-700" />
+      <div>
+        <p class="font-semibold">Submission Failed</p>
+        <p id="contact-error-text"></p>
+        <a href={`mailto:${email}`} class="font-medium text-ember-700 underline">Email me directly instead</a>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-3">
+      <div><label for="name" class={label}>Your Name <span class="text-ember-600">*</span></label><input id="name" name="name" type="text" required placeholder="Alex Smith" class={field} /></div>
+      <div><label for="email" class={label}>Email <span class="text-ember-600">*</span></label><input id="email" name="email" type="email" required placeholder="alex@example.com" class={field} /></div>
+    </div>
+    <div><label for="subject" class={label}>Subject</label><input id="subject" name="subject" type="text" placeholder="Internship / Freelance / Tech chat" class={field} /></div>
+    <div><label for="message" class={label}>Your Message <span class="text-ember-600">*</span></label><textarea id="message" name="message" rows="5" required placeholder="Hello Mubashir, I would like to discuss..." class={`${field} resize-none`}></textarea></div>
+    <button type="submit" id="contact-submit" class="btn-ink w-full justify-center py-3 disabled:cursor-not-allowed disabled:opacity-60">
+      <span class="submit-idle flex items-center gap-2"><Send class="h-4 w-4" />Send Message</span>
+      <span class="submit-busy hidden items-center gap-2"><LoaderCircle class="h-4 w-4 animate-spin" />Sending...</span>
+    </button>
+  </form>
+</Page>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const success = document.getElementById('contact-success')!;
+  const errorBox = document.getElementById('contact-error')!;
+  const errorText = document.getElementById('contact-error-text')!;
+  const submit = document.getElementById('contact-submit') as HTMLButtonElement;
+
+  const swap = (root: Element, showSel: string, hideSel: string) => {
+    root.querySelector(showSel)?.classList.replace('hidden', 'flex');
+    root.querySelector(hideSel)?.classList.replace('flex', 'hidden');
+  };
+  const setBusy = (busy: boolean) => {
+    submit.disabled = busy;
+    if (busy) swap(submit, '.submit-busy', '.submit-idle');
+    else swap(submit, '.submit-idle', '.submit-busy');
+  };
+  const showError = (msg: string) => {
+    errorText.textContent = msg;
+    errorBox.classList.replace('hidden', 'flex');
+  };
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorBox.classList.replace('flex', 'hidden');
+    setBusy(true);
+    const data = new FormData(form);
+    const name = String(data.get('name') ?? '');
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: form.dataset.accessKey,
+          from_name: name,
+          subject: String(data.get('subject') ?? '') || `New Portfolio Message from ${name}`,
+          email: data.get('email'),
+          message: data.get('message'),
+          botcheck: data.get('botcheck') ? true : '',
+        }),
+      });
+      const result = await res.json();
+      if (result.success) {
+        form.reset();
+        form.classList.add('hidden');
+        success.classList.remove('hidden');
+      } else {
+        showError(result.message || 'Something went wrong. Please try emailing me directly.');
+      }
+    } catch {
+      showError('Network error. Please check your internet connection or email directly.');
+    } finally {
+      setBusy(false);
+    }
+  });
+
+  document.getElementById('contact-reset')!.addEventListener('click', () => {
+    success.classList.add('hidden');
+    form.classList.remove('hidden');
+  });
+
+  const copyBtn = document.getElementById('copy-email') as HTMLButtonElement;
+  copyBtn.addEventListener('click', async () => {
+    await navigator.clipboard.writeText(copyBtn.dataset.email!);
+    swap(copyBtn, '.copy-done', '.copy-idle');
+    setTimeout(() => swap(copyBtn, '.copy-idle', '.copy-done'), 2000);
+  });
+</script>
