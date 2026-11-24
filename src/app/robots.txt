@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://mubashir1255.github.io/Portfolio/sitemap.xml

@@ -1,0 +1,89 @@
+---
+import { withBase } from '@/lib';
+
+const projects = [
+  {
+    title: 'Developer Portfolio',
+    description: 'A modern portfolio built with Astro, Tailwind CSS, anime.js, and TypeScript.',
+    image: withBase('projects/portfolio.png'),
+    tech: ['Astro', 'TypeScript', 'Tailwind', 'anime.js'],
+    github: 'https://github.com/mubashir1255/Portfolio',
+    demo: '#',
+  },
+  {
+    title: 'AgroBid Pakistan',
+    description: 'A real-time agriculture marketplace connecting farmers and buyers through live auctions.',
+    image: withBase('projects/portfolio.png'), // Replace later with agrobid.png
+    tech: ['Next.js', 'Prisma', 'PostgreSQL', 'AWS'],
+    github: 'https://github.com/mubashir1255',
+    demo: '#',
+  },
+  {
+    title: 'Qevora Technologies',
+    description:
+      'A polished agency website for Qevora Technologies, presenting its services, work, and full-stack digital solutions.',
+    image: withBase('projects/qevora-technologies.svg'),
+    tech: ['Astro', 'TypeScript', 'Tailwind CSS', 'three.js'],
+    github: 'https://github.com/Qevora-Technologies/qevora-technologies.github.io',
+    demo: 'https://qevora-tech.vercel.app/',
+  },
+];
+---
+
+<section id="projects" class="bg-black py-28 text-white">
+  <div class="mx-auto max-w-7xl px-6">
+    <h2 class="text-center text-5xl font-extrabold" data-split>
+      Featured{' '}
+      <span class="text-gradient inline-block bg-gradient-to-r from-blue-500 to-cyan-400">Projects</span>
+    </h2>
+
+    <p class="mx-auto mt-5 max-w-2xl text-center text-gray-400" data-reveal>
+      Some projects I&apos;ve built while learning full-stack development.
+    </p>
+
+    <div class="mt-16 grid gap-10 md:grid-cols-2" data-stagger data-tilt>
+      {
+        projects.map((project) => (
+          <article class="overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl transition-[border-color,box-shadow] duration-300 hover:border-blue-500/40 hover:shadow-2xl hover:shadow-blue-500/10">
+            <div class="relative h-64 overflow-hidden">
+              <img
+                src={project.image}
+                alt={project.title}
+                loading="lazy"
+                decoding="async"
+                class="absolute inset-0 h-full w-full object-cover transition duration-700 hover:scale-110"
+              />
+            </div>
+            <div class="p-8">
+              <h3 class="text-3xl font-bold">{project.title}</h3>
+              <p class="mt-4 text-gray-400">{project.description}</p>
+              <div class="mt-6 flex flex-wrap gap-3">
+                {project.tech.map((item) => (
+                  <span class="rounded-full bg-blue-600/20 px-4 py-2 text-sm text-blue-300">{item}</span>
+                ))}
+              </div>
+              <div class="mt-8 flex gap-4">
+                <a
+                  href={project.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  class="rounded-xl border border-gray-600 px-6 py-3 transition hover:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
+                  aria-label={`View ${project.title} source code on GitHub`}
+                >
+                  GitHub
+                </a>
+                <a
+                  href={project.demo}
+                  class="rounded-xl bg-blue-600 px-6 py-3 font-semibold transition hover:bg-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
+                  aria-label={`View ${project.title} live demo`}
+                >
+                  Live Demo
+                </a>
+              </div>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

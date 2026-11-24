@@ -1,0 +1,70 @@
+---
+import { CodeXml, Cloud, Sparkles, ShieldCheck } from '@lucide/astro';
+import SectionHeading from './SectionHeading.astro';
+
+const highlights = [
+  { icon: CodeXml, title: 'Full Stack', text: 'Next.js · React · Supabase', gradient: 'from-blue-500 to-cyan-400' },
+  { icon: Cloud, title: 'Cloud & Deployment', text: 'AWS · Docker · Vercel · CI/CD', gradient: 'from-cyan-400 to-teal-400' },
+  { icon: Sparkles, title: 'AI Automation', text: 'Gemini API · API Integration', gradient: 'from-violet-500 to-blue-500' },
+  { icon: ShieldCheck, title: 'Cybersecurity', text: 'Auth · API Security · Defense', gradient: 'from-blue-400 to-indigo-500' },
+];
+
+const stats = [
+  { value: 20, suffix: '+', label: 'Projects Built' },
+  { value: 16, suffix: '+', label: 'Technologies' },
+  { value: 2023, suffix: '', label: 'Started Coding' },
+  { value: 100, suffix: '%', label: 'Passion' },
+];
+---
+
+<section id="about" class="relative z-10 overflow-hidden bg-black py-32 text-white">
+  <div class="pointer-events-none absolute inset-0 flex justify-center" aria-hidden="true">
+    <div class="h-[500px] w-[800px] translate-y-40 rounded-full bg-blue-600/5 blur-[120px]"></div>
+  </div>
+
+  <div class="relative mx-auto max-w-6xl px-6">
+    <SectionHeading eyebrow="Who I Am" lead="About" highlight="Me" />
+
+    <p class="mx-auto mt-8 max-w-2xl text-center text-lg leading-8 text-gray-400" data-reveal>
+      I&apos;m a developer passionate about building <span class="font-medium text-white"
+        >secure, scalable, and modern applications</span
+      >. My expertise spans full-stack engineering, cloud computing, AI automation, and cybersecurity.
+    </p>
+
+    <div class="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-4" data-stagger data-tilt>
+      {
+        highlights.map((item) => (
+          <div class="group relative cursor-default overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.03] p-7 backdrop-blur-sm">
+            <div
+              class={`absolute inset-0 bg-gradient-to-br opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100 ${item.gradient}`}
+              aria-hidden="true"
+            />
+            <div class="absolute inset-0 bg-gradient-to-br from-white to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-[0.06]" />
+            <div class={`relative mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br shadow-lg ${item.gradient}`}>
+              <item.icon class="h-6 w-6 text-white" />
+            </div>
+            <h3 class="relative text-lg font-bold text-white">{item.title}</h3>
+            <p class="relative mt-2 text-sm leading-6 text-gray-400">{item.text}</p>
+          </div>
+        ))
+      }
+    </div>
+
+    <div
+      class="mt-20 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.07] md:grid-cols-4"
+      data-stagger
+    >
+      {
+        stats.map((stat) => (
+          <div class="flex flex-col items-center justify-center gap-1 bg-black px-6 py-10 transition-colors duration-300 hover:bg-white/[0.03]">
+            <span class="text-gradient inline-block bg-gradient-to-r from-blue-400 to-cyan-300 text-4xl font-extrabold tracking-tight tabular-nums">
+              <span data-count={stat.value}>{stat.value}</span>
+              {stat.suffix}
+            </span>
+            <span class="mt-1 text-sm tracking-wide text-gray-500">{stat.label}</span>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

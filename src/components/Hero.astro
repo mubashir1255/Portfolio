@@ -1,0 +1,82 @@
+---
+import { socials } from '@/data/site';
+
+const chips = [
+  'Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Supabase', 'PostgreSQL',
+  'Docker', 'AWS', 'AI Automation', 'Cybersecurity', 'Vercel', 'CI/CD',
+];
+---
+
+<section
+  id="hero"
+  class="relative flex min-h-screen items-center justify-center overflow-hidden bg-black px-6 pt-28 pb-16 text-white sm:pt-32"
+>
+  <!-- Interactive dot grid: anime.js stagger waves ripple out from wherever you click. -->
+  <div
+    id="dot-grid"
+    class="dot-grid absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black_35%,transparent_75%)]"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="relative mx-auto max-w-4xl text-center" id="hero-content">
+    <p class="font-semibold tracking-[0.3em] text-blue-400 uppercase" data-hero data-scramble-hero>Welcome</p>
+
+    <h1 class="mt-4 text-4xl leading-tight font-extrabold sm:text-6xl md:text-7xl" data-hero id="hero-title">
+      Hello, I&apos;m{' '}
+      <span class="text-gradient inline-block bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-300">
+        Mubashir
+      </span>
+    </h1>
+
+    <h2 class="mt-6 text-xl text-gray-300 sm:text-2xl" data-hero-fade>
+      Full Stack Developer • Cloud & AI • Cybersecurity Enthusiast
+    </h2>
+
+    <p class="mx-auto mt-6 max-w-3xl text-lg leading-8 text-gray-400" data-hero-fade>
+      I build secure, fast, and scalable web applications using Next.js, React, TypeScript, Supabase, PostgreSQL,
+      Docker, and AWS. Passionate about AI automation, cloud computing, and seamless CI/CD deployments.
+    </p>
+
+    <div class="mt-10 flex flex-col justify-center gap-4 sm:flex-row" data-hero-pop>
+      <a
+        href="#projects"
+        class="w-full rounded-xl bg-blue-600 px-7 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:bg-blue-500 hover:shadow-xl hover:shadow-blue-500/40 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none sm:w-auto"
+      >
+        View Projects
+      </a>
+      <a
+        href="#contact"
+        class="w-full rounded-xl border border-gray-600 px-7 py-3 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 hover:bg-gray-900 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none sm:w-auto"
+      >
+        Contact Me
+      </a>
+    </div>
+
+    <div class="mt-8 flex justify-center gap-6 text-gray-400" data-hero-pop>
+      {
+        socials.map((s) => (
+          <a
+            href={s.href}
+            target="_blank"
+            rel="noreferrer"
+            class="rounded-md px-1 transition hover:text-blue-400 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
+            aria-label={s.aria}
+          >
+            {s.label}
+          </a>
+        ))
+      }
+    </div>
+
+    <div class="mt-12 flex flex-wrap justify-center gap-3" data-hero-pop>
+      {
+        chips.map((tech) => (
+          <span class="rounded-full border border-gray-700 bg-white/5 px-4 py-2 text-sm text-gray-300 transition duration-300 hover:border-blue-500 hover:text-white hover:shadow-lg hover:shadow-blue-500/20">
+            {tech}
+          </span>
+        ))
+      }
+    </div>
+  </div>
+</section>

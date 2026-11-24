@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+body {
+  background: #000;
+  color: #fff;
+}
+
+@layer utilities {
+  .text-gradient {
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+}
+
+/* ── Ambient background blobs (was Framer Motion; now pure CSS) ── */
+@keyframes blob-a {
+  50% { transform: translate(120px, -80px); }
+}
+@keyframes blob-b {
+  50% { transform: translate(-120px, 100px); }
+}
+@keyframes blob-c {
+  50% { transform: translate(-50%, calc(-50% - 120px)); }
+}
+.blob-a { animation: blob-a 18s ease-in-out infinite; }
+.blob-b { animation: blob-b 22s ease-in-out infinite; }
+.blob-c { animation: blob-c 14s ease-in-out infinite; }
+
+/* ── Hero dot grid (driven by anime.js stagger) ── */
+.dot-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  grid-template-rows: repeat(var(--rows), 1fr);
+}
+.dot-grid > span {
+  justify-self: center;
+  align-self: center;
+  width: 4px;
+  height: 4px;
+  border-radius: 9999px;
+  background: rgba(96, 165, 250, 0.35);
+  will-change: transform, opacity;
+}
+
+/*
+ * Pre-animation state. Only hidden when JS is running (html.js) and the user
+ * hasn't asked for reduced motion, so content is never stuck invisible.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal],
+  .js [data-stagger] > *,
+  .js [data-hero],
+  .js [data-hero-fade],
+  .js [data-hero-pop] > *,
+  .js [data-split],
+  .js [data-heading] h2,
+  .js [data-scramble],
+  .js [data-draw] {
+    opacity: 0;
+  }
+}
+
+/* SVG accent line under section headings */
+.accent-line path {
+  stroke: url(#accent-gradient);
+}
+
+/* Split-text helpers produced by anime.js splitText */
+.split-char,
+.split-word {
+  display: inline-block;
+  will-change: transform;
+}

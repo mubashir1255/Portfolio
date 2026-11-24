@@ -1,0 +1,282 @@
+---
+import { Mail, Send, CircleCheck, CircleAlert, LoaderCircle, Copy, Check, MapPin, Clock, Sparkles } from '@lucide/astro';
+import SectionHeading from './SectionHeading.astro';
+import { email, socials } from '@/data/site';
+
+// Web3Forms access keys are public by design (they only allow sending to the owner's inbox).
+const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || 'e9d46f6d-269e-455a-a5b0-76effdfb7724';
+
+const card = 'rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl';
+const input =
+  'mt-2 w-full rounded-xl border border-white/10 bg-zinc-900/80 px-4 py-3 text-sm text-white placeholder-gray-500 transition duration-300 focus:border-blue-500 focus:bg-zinc-900 focus:ring-2 focus:ring-blue-500/20 focus:outline-none';
+const label = 'block text-xs font-semibold tracking-wider text-gray-300 uppercase';
+---
+
+<section id="contact" class="relative z-10 overflow-hidden bg-black px-6 py-28 text-white">
+  <div class="pointer-events-none absolute inset-0 flex justify-center" aria-hidden="true">
+    <div class="h-[400px] w-[700px] translate-y-20 rounded-full bg-blue-600/5 blur-[140px]"></div>
+  </div>
+
+  <div class="relative mx-auto max-w-6xl">
+    <SectionHeading
+      eyebrow="Get In Touch"
+      lead="Let's Build Something"
+      highlight="Amazing"
+      intro="Have a project in mind, looking for a full stack developer, or just want to connect? Drop a message below and I'll get back to you promptly."
+    />
+
+    <div class="mt-16 grid gap-10 lg:grid-cols-12">
+      <div class="flex flex-col justify-between space-y-8 lg:col-span-5" data-stagger data-from="left">
+        <div class="rounded-3xl border border-white/10 bg-white/5 p-7 backdrop-blur-xl">
+          <div class="flex items-center gap-3">
+            <span class="relative flex h-3 w-3">
+              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex h-3 w-3 rounded-full bg-emerald-500"></span>
+            </span>
+            <span class="font-semibold text-emerald-400">Available for Opportunities</span>
+          </div>
+          <p class="mt-3 text-sm leading-relaxed text-gray-400">
+            Actively seeking full-time junior positions, software engineering internships, and freelance full-stack
+            projects.
+          </p>
+        </div>
+
+        <div class="space-y-4">
+          <div class={`group ${card} transition duration-300 hover:border-blue-500/40`}>
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex min-w-0 items-center gap-3">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400">
+                  <Mail class="h-5 w-5" />
+                </div>
+                <div class="min-w-0">
+                  <p class="text-xs text-gray-500">Email Address</p>
+                  <a href={`mailto:${email}`} class="text-sm font-medium break-all text-white transition hover:text-blue-400">
+                    {email}
+                  </a>
+                </div>
+              </div>
+              <button
+                type="button"
+                id="copy-email"
+                data-email={email}
+                class="flex shrink-0 items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-gray-300 transition hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
+                aria-label="Copy email address"
+              >
+                <span class="copy-idle flex items-center gap-1.5"><Copy class="h-3.5 w-3.5" /><span>Copy</span></span>
+                <span class="copy-done hidden items-center gap-1.5 text-emerald-400">
+                  <Check class="h-3.5 w-3.5" /><span>Copied</span>
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <div class={`flex items-center gap-3 ${card}`}>
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-400">
+              <MapPin class="h-5 w-5" />
+            </div>
+            <div>
+              <p class="text-xs text-gray-500">Location</p>
+              <p class="text-sm font-medium text-white">Pakistan · Available for Worldwide Remote</p>
+            </div>
+          </div>
+
+          <div class={`flex items-center gap-3 ${card}`}>
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-400">
+              <Clock class="h-5 w-5" />
+            </div>
+            <div>
+              <p class="text-xs text-gray-500">Response Time</p>
+              <p class="text-sm font-medium text-white">Usually within 24 hours</p>
+            </div>
+          </div>
+        </div>
+
+        <div class={card}>
+          <p class="text-xs font-semibold tracking-wider text-gray-400 uppercase">Connect on Socials</p>
+          <div class="mt-3 flex flex-wrap gap-3">
+            {
+              socials.map((s) => (
+                <a
+                  href={s.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  class="rounded-xl border border-gray-700 bg-zinc-900 px-4 py-2 text-sm font-medium text-gray-300 transition duration-300 hover:border-blue-500 hover:text-white hover:shadow-lg hover:shadow-blue-500/20 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
+                  aria-label={s.aria}
+                >
+                  {s.label}
+                </a>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl lg:col-span-7"
+        data-reveal
+        data-from="right"
+      >
+        <div class="flex items-center gap-2 text-blue-400">
+          <Sparkles class="h-5 w-5" />
+          <h3 class="text-xl font-bold text-white">Send Me a Message</h3>
+        </div>
+        <p class="mt-1 text-sm text-gray-400">
+          Fill in your details below and your message will be forwarded directly to my inbox.
+        </p>
+
+        <div
+          id="contact-success"
+          class="mt-8 hidden rounded-2xl border border-emerald-500/30 bg-emerald-950/40 p-8 text-center backdrop-blur-xl"
+          role="status"
+        >
+          <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400">
+            <CircleCheck class="h-8 w-8" />
+          </div>
+          <h4 class="mt-4 text-xl font-bold text-white">Message Sent Successfully!</h4>
+          <p class="mt-2 text-sm text-gray-300">
+            Thank you for reaching out. I have received your message and will reply to your email as soon as possible.
+          </p>
+          <button
+            type="button"
+            id="contact-reset"
+            class="mt-6 rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
+          >
+            Send Another Message
+          </button>
+        </div>
+
+        <form id="contact-form" class="mt-8 space-y-5" data-access-key={accessKey} novalidate={false}>
+          <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
+
+          <div
+            id="contact-error"
+            class="hidden items-start gap-3 rounded-xl border border-rose-500/30 bg-rose-950/40 p-4 text-sm text-rose-200"
+            role="alert"
+          >
+            <CircleAlert class="mt-0.5 h-5 w-5 shrink-0 text-rose-400" />
+            <div>
+              <p class="font-semibold text-rose-300">Submission Failed</p>
+              <p class="mt-0.5" id="contact-error-text"></p>
+              <a href={`mailto:${email}`} class="mt-2 inline-block font-medium text-blue-400 underline hover:text-blue-300">
+                Click here to email me directly instead
+              </a>
+            </div>
+          </div>
+
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label for="name" class={label}>Your Name <span class="text-blue-400">*</span></label>
+              <input id="name" name="name" type="text" required placeholder="e.g. Alex Smith" class={input} />
+            </div>
+            <div>
+              <label for="email" class={label}>Email Address <span class="text-blue-400">*</span></label>
+              <input id="email" name="email" type="email" required placeholder="alex@example.com" class={input} />
+            </div>
+          </div>
+
+          <div>
+            <label for="subject" class={label}>Subject</label>
+            <input
+              id="subject"
+              name="subject"
+              type="text"
+              placeholder="Internship / Freelance Project / Tech Discussion"
+              class={input}
+            />
+          </div>
+
+          <div>
+            <label for="message" class={label}>Your Message <span class="text-blue-400">*</span></label>
+            <textarea
+              id="message"
+              name="message"
+              rows="5"
+              required
+              placeholder="Hello Mubashir, I would like to discuss..."
+              class={`${input} resize-none`}></textarea>
+          </div>
+
+          <button
+            type="submit"
+            id="contact-submit"
+            class="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-8 py-3.5 font-semibold text-white transition-all duration-300 hover:bg-blue-500 hover:shadow-xl hover:shadow-blue-500/30 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            <span class="submit-idle flex items-center gap-2"><Send class="h-4 w-4" /><span>Send Message</span></span>
+            <span class="submit-busy hidden items-center gap-2">
+              <LoaderCircle class="h-4 w-4 animate-spin" /><span>Sending Message...</span>
+            </span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const success = document.getElementById('contact-success')!;
+  const errorBox = document.getElementById('contact-error')!;
+  const errorText = document.getElementById('contact-error-text')!;
+  const submit = document.getElementById('contact-submit') as HTMLButtonElement;
+
+  const swap = (root: Element, showSel: string, hideSel: string) => {
+    root.querySelector(showSel)?.classList.replace('hidden', 'flex');
+    root.querySelector(hideSel)?.classList.replace('flex', 'hidden');
+  };
+
+  const setBusy = (busy: boolean) => {
+    submit.disabled = busy;
+    busy ? swap(submit, '.submit-busy', '.submit-idle') : swap(submit, '.submit-idle', '.submit-busy');
+  };
+
+  const showError = (msg: string) => {
+    errorText.textContent = msg;
+    errorBox.classList.replace('hidden', 'flex');
+  };
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorBox.classList.replace('flex', 'hidden');
+    setBusy(true);
+    const data = new FormData(form);
+    const name = String(data.get('name') ?? '');
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: form.dataset.accessKey,
+          from_name: name,
+          subject: String(data.get('subject') ?? '') || `New Portfolio Message from ${name}`,
+          email: data.get('email'),
+          message: data.get('message'),
+          botcheck: data.get('botcheck') ? true : '',
+        }),
+      });
+      const result = await res.json();
+      if (result.success) {
+        form.reset();
+        form.classList.add('hidden');
+        success.classList.remove('hidden');
+      } else {
+        showError(result.message || 'Something went wrong. Please try emailing me directly.');
+      }
+    } catch {
+      showError('Network error. Please check your internet connection or email directly.');
+    } finally {
+      setBusy(false);
+    }
+  });
+
+  document.getElementById('contact-reset')!.addEventListener('click', () => {
+    success.classList.add('hidden');
+    form.classList.remove('hidden');
+  });
+
+  const copyBtn = document.getElementById('copy-email') as HTMLButtonElement;
+  copyBtn.addEventListener('click', async () => {
+    await navigator.clipboard.writeText(copyBtn.dataset.email!);
+    swap(copyBtn, '.copy-done', '.copy-idle');
+    setTimeout(() => swap(copyBtn, '.copy-idle', '.copy-done'), 2000);
+  });
+</script>

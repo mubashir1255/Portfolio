@@ -1,0 +1,24 @@
+---
+/** Eyebrow + split-text heading + self-drawing accent line, all animated by src/scripts/motion.ts. */
+interface Props {
+  eyebrow: string;
+  lead: string;
+  highlight: string;
+  intro?: string;
+}
+const { eyebrow, lead, highlight, intro } = Astro.props;
+---
+
+<div class="text-center" data-heading>
+  <p class="mb-3 text-sm font-semibold tracking-[0.25em] text-blue-400 uppercase" data-scramble>{eyebrow}</p>
+  <h2 class="text-4xl font-extrabold sm:text-5xl" data-split>
+    {lead}{' '}
+    <span class="text-gradient inline-block bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-300">
+      {highlight}
+    </span>
+  </h2>
+  {intro && <p class="mx-auto mt-4 max-w-2xl text-lg text-gray-400" data-reveal>{intro}</p>}
+  <svg class="accent-line mx-auto mt-6 block h-px w-24 overflow-visible" viewBox="0 0 96 1" aria-hidden="true">
+    <path d="M0 0.5H96" stroke-width="1" fill="none" data-draw></path>
+  </svg>
+</div>
