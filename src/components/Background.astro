@@ -1,20 +1,7 @@
 ---
-/* Fixed ambient blobs + cursor glow. Blobs are CSS keyframes; glow follows the pointer via motion.ts. */
+/* Fixed ambient layer behind the book: the anime.js dot grid. */
 ---
 
-<div class="fixed inset-0 -z-10 overflow-hidden bg-black" aria-hidden="true">
-  <div class="blob-a absolute top-20 left-20 h-96 w-96 rounded-full bg-blue-600/20 blur-[140px]"></div>
-  <div class="blob-b absolute right-20 bottom-20 h-96 w-96 rounded-full bg-cyan-500/20 blur-[150px]"></div>
-  <div
-    class="blob-c absolute top-1/2 left-1/2 h-[450px] w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-500/10 blur-[180px]"
-  >
-  </div>
-</div>
-
-<div
-  id="mouse-glow"
-  class="pointer-events-none fixed inset-0 z-0 hidden md:block"
-  style="background: radial-gradient(400px at var(--mx, -200px) var(--my, -200px), rgba(37,99,235,.12), transparent 80%)"
-  aria-hidden="true"
->
+<div class="fixed inset-0 -z-10 overflow-hidden bg-ink" aria-hidden="true">
+  <div id="dot-grid" class="dot-grid absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_80%)]"></div>
 </div>

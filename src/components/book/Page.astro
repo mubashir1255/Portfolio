@@ -1,0 +1,29 @@
+---
+/**
+ * One page of the book. `anchor` makes it a navigation target (#about etc.).
+ * Pages are plain HTML; src/scripts/book.ts arranges them into spreads and turns them.
+ */
+interface Props {
+  anchor?: string;
+  chapter?: string;
+  num?: number | string;
+  running?: string;
+  variant?: 'paper' | 'endpaper' | 'cover';
+  class?: string;
+}
+const { anchor, chapter = '', num, running = 'Mubashir Fayyaz', variant = 'paper', class: cls } = Astro.props;
+---
+
+<article class:list={['page', `page-${variant}`, cls]} data-anchor={anchor} data-chapter={chapter}>
+  <div class="page-body">
+    <slot />
+  </div>
+  {
+    num !== undefined && (
+      <footer class="page-foot">
+        <span>{running}</span>
+        <span>{num}</span>
+      </footer>
+    )
+  }
+</article>
