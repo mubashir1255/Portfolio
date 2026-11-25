@@ -97,23 +97,29 @@ const onGrid = (lat: number, lon: number, c: number, r: number) => {
   return (nearLon && r % 2 === 0) || (nearLat && c % 2 === 0);
 };
 
-type Tag = '' | 'b' | 'i' | 'u' | 'em';
-const enum K {
+/** What a cell shows. Exported so the canvas renderer can pick colours. */
+export enum K {
   Empty,
   Land,
   Grid,
   Rim,
-  Pak,
+  PakFill,
+  PakBorder,
   Home,
 }
 
-/**
- * One frame as HTML: plain text for land, <b> blue grid dots, <em> Pakistan's fill,
- * <u> Pakistan's border, <i> Lahore. `centerLon` is the longitude facing the viewer.
- */
-export function renderGlobe(g: GlobeGeometry, centerLon: number): string {
+export interface Frame {
+  cols: number;
+  rows: number;
+  kind: Uint8Array;
+  chars: string[];
+  /** index of Lahore's cell, or -1 when it's on the far side */
+  home: number;
+}
+
+/** One frame as cells. `centerLon` is the longitude facing the viewer. */
+export function frame(g: GlobeGeometry, centerLon: number): Frame {
   const { cols, rows, cells } = g;
-  // pass 1: what is in each cell this frame
   const kind = new Uint8Array(cols * rows);
   const shade = new Uint8Array(cols * rows);
   let home = -1;
@@ -132,58 +138,69 @@ export function renderGlobe(g: GlobeGeometry, centerLon: number): string {
       homeDist = dist;
       home = i;
     }
-    if (isPakistan(cell.lat, lon)) kind[i] = K.Pak;
+    if (isPakistan(cell.lat, lon)) kind[i] = K.PakFill;
     else if (isLand(cell.lat, lon)) kind[i] = K.Land;
     else if (onGrid(cell.lat, lon, c, r)) kind[i] = K.Grid;
     else if (cell.rim) kind[i] = K.Rim;
   }
   if (home >= 0) kind[home] = K.Home; // Lahore: the one cell closest to it
-  const isPk = (r: number, c: number) => {
+  const inPak = (r: number, c: number) => {
     if (r < 0 || c < 0 || r >= rows || c >= cols) return false;
     const k = kind[r * cols + c];
-    return k === K.Pak || k === K.Home;
+    return k === K.PakFill || k === K.PakBorder || k === K.Home;
   };
-
-  // pass 2: text, grouping runs of the same style
-  let out = '';
-  let open: Tag = '';
-  const put = (ch: string, tag: Tag) => {
-    if (tag !== open) {
-      if (open) out += `</${open}>`;
-      if (tag) out += `<${tag}>`;
-      open = tag;
-    }
-    out += ch;
-  };
+  const chars: string[] = new Array(cols * rows);
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
       const i = r * cols + c;
       switch (kind[i]) {
         case K.Home:
-          put('●', 'i');
+          chars[i] = '●';
           break;
-        case K.Pak: {
-          const border = !isPk(r - 1, c) || !isPk(r + 1, c) || !isPk(r, c - 1) || !isPk(r, c + 1);
-          if (border) put('#', 'u');
-          else put(RAMP[Math.max(2, shade[i])], 'em');
+        case K.PakFill:
+          if (!inPak(r - 1, c) || !inPak(r + 1, c) || !inPak(r, c - 1) || !inPak(r, c + 1)) {
+            kind[i] = K.PakBorder;
+            chars[i] = '#';
+          } else chars[i] = RAMP[Math.max(2, shade[i])];
           break;
-        }
         case K.Land:
-          put(RAMP[shade[i]], '');
+          chars[i] = RAMP[shade[i]];
           break;
         case K.Grid:
-          put('.', 'b');
-          break;
         case K.Rim:
-          put('.', '');
+          chars[i] = '.';
           break;
         default:
-          put(' ', '');
+          chars[i] = ' ';
       }
     }
-    put('\n', '');
   }
-  if (open) out += `</${open}>`;
+  return { cols, rows, kind, chars, home };
+}
+
+/** Text version (for <noscript>): <b> grid, <em> Pakistan fill, <u> its border, <i> Lahore. */
+export function renderGlobe(g: GlobeGeometry, centerLon: number): string {
+  const f = frame(g, centerLon);
+  const tagOf: Record<number, string> = { [K.Grid]: 'b', [K.PakFill]: 'em', [K.PakBorder]: 'u', [K.Home]: 'i' };
+  let out = '';
+  let open = '';
+  for (let r = 0; r < f.rows; r++) {
+    for (let c = 0; c < f.cols; c++) {
+      const i = r * f.cols + c;
+      const tag = tagOf[f.kind[i]] ?? '';
+      if (tag !== open) {
+        if (open) out += `</${open}>`;
+        if (tag) out += `<${tag}>`;
+        open = tag;
+      }
+      out += f.chars[i];
+    }
+    if (open) {
+      out += `</${open}>`;
+      open = '';
+    }
+    out += '\n';
+  }
   return out;
 }
 
