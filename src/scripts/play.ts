@@ -1,7 +1,8 @@
 /**
- * Play mode: an opt-in switch in the nav. Off (the default) the page is plain HTML and CSS.
- * On, it loads the vendored sakuga-vfx files (public/sakuga-vfx, MIT) and adds their effects
- * to native links and buttons marked `data-sakuga`. With reduced motion, nothing is loaded.
+ * Play mode: a switch in the nav, on by default (Layout.astro sets it before first paint; a visitor
+ * who turns it off stays off). When on, it loads the vendored sakuga-vfx files (public/sakuga-vfx, MIT)
+ * on the visitor's first interaction, not at page load, and adds their effects to native links and
+ * buttons marked `data-sakuga`. Off, or with reduced motion, nothing is loaded.
  *
  *   data-sakuga="impact"   squash + burst + sound-effect word on click
  *   data-sakuga="done"     the same, then a ✓ (for actions that finish on click, e.g. a download)
@@ -63,6 +64,20 @@ export function onPlayChange(f: (on: boolean) => void) {
 }
 
 // ── Loading the vendored files ──────────────────────────────
+/**
+ * Resolves on the visitor's first interaction (pointer, touch, key, wheel or scroll), which always
+ * comes before their first click. Keeps ~90 KB of effects off the initial page load.
+ */
+const engaged = new Promise<void>((resolve) => {
+  const events = ['pointermove', 'pointerdown', 'touchstart', 'keydown', 'wheel', 'scroll'];
+  const opts = { capture: true, passive: true } as const;
+  const go = () => {
+    events.forEach((e) => removeEventListener(e, go, opts));
+    resolve();
+  };
+  events.forEach((e) => addEventListener(e, go, opts));
+});
+
 const loaded = new Map<string, Promise<void>>();
 
 function loadFile(file: string) {
@@ -94,6 +109,7 @@ function theme(fx: SakugaFX) {
 
 /** Loads the given controls (default: button + tabs). Resolves null if anything fails: the native page keeps working. */
 export async function loadSakuga(files: string[] = ['button.js', 'tabs.js']): Promise<SakugaFX | null> {
+  await engaged;
   try {
     await Promise.all(files.map(loadFile));
     const fx = window.SakugaFX ?? null;

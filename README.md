@@ -3,8 +3,9 @@
 https://mubashir1255.github.io/Portfolio/  click here to open my Portfolio
 
 My personal portfolio in a comic-panel style: thick ink panels, halftone dots and numbered chapters
-(Experience, Projects, Skills, Journey, Contact). It's quiet by default. The opt-in **Play mode** in the nav adds
-anime-style effects to buttons, tabs and toasts, using [sakuga-vfx](https://github.com/finktheartist/sakuga-vfx) (MIT).
+(Experience, Projects, Skills, Journey, Contact). **Play mode** (on by default; visitors can switch it off in the
+nav, and that choice is remembered) adds anime-style effects to buttons, tabs and toasts, using
+[sakuga-vfx](https://github.com/finktheartist/sakuga-vfx) (MIT). The effects load on the first interaction, not at page load.
 
 Built with **Astro** and **Tailwind CSS v4**. Fully static and usable without JavaScript.
 

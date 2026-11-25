@@ -1008,3 +1008,23 @@ sakuga-tabs {
     filter: grayscale(1) contrast(1.15);
   }
 }
+
+/* ── Finale tilt-forward: plays when the panel scrolls into view, replays on hover ── */
+@layer components {
+  .finale {
+    perspective: 900px;
+  }
+  .finale__text {
+    transform-origin: 50% 100%;
+  }
+  .finale.is-tilting .finale__text {
+    animation: tilt-forward 0.95s cubic-bezier(0.25, 0.9, 0.3, 1) both;
+  }
+}
+@keyframes tilt-forward {
+  0% { transform: rotateX(72deg); opacity: 0; }
+  45% { transform: rotateX(-14deg); opacity: 1; }   /* swings past upright, toward the reader */
+  70% { transform: rotateX(6deg); }
+  88% { transform: rotateX(-2deg); }
+  100% { transform: rotateX(0deg); }
+}

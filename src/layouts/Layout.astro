@@ -53,11 +53,13 @@ const ogImage = new URL(withBase('og.png'), Astro.site).href;
       Analytics hook: a privacy-friendly snippet (e.g. Plausible, Umami, GoatCounter) goes here.
       Not enabled. Ask before adding one.
     -->
-    <!-- Restore Play mode before first paint so the page doesn't flash. -->
+    <!-- Play mode is on by default; a visitor who switches it off stays off. Set before first paint. -->
     <script is:inline>
+      var play = 'on';
       try {
-        if (localStorage.getItem('play-mode') === 'on') document.documentElement.dataset.play = 'on';
+        play = localStorage.getItem('play-mode') || 'on';
       } catch {}
+      if (play === 'on') document.documentElement.dataset.play = 'on';
     </script>
   </head>
   <body>

@@ -167,6 +167,26 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || 'e9d46f6d-269e-
     form.querySelector<HTMLInputElement>('input[name="name"]')?.focus();
   });
 
+  // Finale: tilt forward when it scrolls into view; hovering replays it.
+  const finale = document.querySelector<HTMLElement>('.finale');
+  if (finale) {
+    const tilt = () => {
+      finale.classList.remove('is-tilting');
+      void finale.offsetWidth; // restart the animation
+      finale.classList.add('is-tilting');
+    };
+    new IntersectionObserver(
+      (entries, io) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          tilt();
+          io.disconnect();
+        }
+      },
+      { threshold: 0.35 },
+    ).observe(finale);
+    finale.addEventListener('mouseenter', tilt);
+  }
+
   // Copy button: shown only when the Clipboard API exists.
   const copyBtn = document.getElementById('copy-email') as HTMLButtonElement;
   const copyLabel = copyBtn.querySelector('[data-copy-label]')!;
