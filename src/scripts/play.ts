@@ -2,6 +2,11 @@
  * Play mode: an opt-in switch in the nav. Off (the default) the page is plain HTML and CSS.
  * On, it loads the vendored sakuga-vfx files (public/sakuga-vfx, MIT) and adds their effects
  * to native links and buttons marked `data-sakuga`. With reduced motion, nothing is loaded.
+ *
+ *   data-sakuga="impact"   squash + burst + sound-effect word on click
+ *   data-sakuga="done"     the same, then a ✓ (for actions that finish on click, e.g. a download)
+ *   data-sakuga-word       the painted word: don (default), shu (secondary buttons), kachi, pon, zuza, gogo
+ * Call sakugaDone(el) yourself when an action finishes later (e.g. copy to clipboard).
  */
 import { withBase } from '@/lib';
 
@@ -142,7 +147,8 @@ function wire(fx: SakugaFX, el: HTMLElement) {
     for (const [dx, dy] of [[-1, -0.5], [1, -1], [-1, 0.9], [1, 1]]) {
       fx.puff(c.x + dx * (c.w / 2 + 6), c.y + dy * 22, { size: 13, n: 5, vx: dx * 46, vy: dy * 30 - 6, life: 0.9 });
     }
-    fx.sfx('don', c.x + 10, c.y - 70, { size: 140, rot: -0.12, life: 1 });
+    const word = el.dataset.sakugaWord ?? (el.classList.contains('btn--secondary') ? 'shu' : 'don');
+    fx.sfx(word, c.x + 10, c.y - 70, { size: word === 'don' ? 140 : 110, rot: -0.12, life: 1 });
     fx.later(200, () => {
       sq.s.x = 1.18;
       fx.wob(c.x - c.w / 2 - 8, c.y, { dir: -1 });
@@ -154,7 +160,13 @@ function wire(fx: SakugaFX, el: HTMLElement) {
   });
 }
 
-/** sakuga-button's done(): a check with a glint. Used after the resume download starts. */
+/** Lands the ✓ on an element whose action just finished. Does nothing outside Play mode. */
+export function sakugaDone(el: HTMLElement) {
+  const fx = window.SakugaFX;
+  if (fx && effectsWanted()) done(fx, el);
+}
+
+/** sakuga-button's done(): a check with a glint. */
 function done(fx: SakugaFX, el: HTMLElement) {
   const q = fx.at(el, 1, 0);
   el.classList.add('is-done');

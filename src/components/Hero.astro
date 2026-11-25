@@ -73,7 +73,7 @@ import { withBase } from '@/lib';
         {
           featuredProjects.map((p, i) => (
             <li>
-              <a href={`#project-${p.slug}`} class="ink-link block text-lg leading-tight">
+              <a href={`#project-${p.slug}`} class="ink-link block text-lg leading-tight" data-sakuga="impact" data-sakuga-word="pon">
                 <span class="text-accent">{String(i + 1).padStart(2, '0')}</span> {p.title}
               </a>
               <span class="text-sm text-ink-soft">{p.meta}</span>

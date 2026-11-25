@@ -24,7 +24,7 @@ const host = url?.includes('loom.com') ? 'Loom' : 'YouTube';
 {
   url ? (
     <div class="frame video-frame" style="aspect-ratio: 16 / 9">
-      <a href={url} class="video-facade h-full" data-embed={embed} data-title={`${title} demo`} target="_blank" rel="noopener noreferrer">
+      <a href={url} class="video-facade h-full" data-sakuga="impact" data-embed={embed} data-title={`${title} demo`} target="_blank" rel="noopener noreferrer">
         <span class="video-facade__play" aria-hidden="true">▶</span>
         <span class="font-bold">Play demo</span>
         <span class="text-xs opacity-80">Loads from {host}</span>

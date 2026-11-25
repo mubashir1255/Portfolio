@@ -22,7 +22,7 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || 'e9d46f6d-269e-
         <p class="kicker">Email</p>
         <div class="flex flex-wrap items-center gap-3">
           <a href={`mailto:${email}`} class="ink-link break-all text-lg" id="contact-email">{email}</a>
-          <button type="button" class="btn btn--secondary btn--small" id="copy-email" data-email={email} hidden>
+          <button type="button" class="btn btn--secondary btn--small" id="copy-email" data-email={email} data-sakuga="impact" data-sakuga-word="kachi" hidden>
             <span data-copy-label>Copy</span>
           </button>
         </div>
@@ -49,7 +49,7 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || 'e9d46f6d-269e-
       <div id="contact-success" class="space-y-4 py-6 text-center" role="status" hidden>
         <p class="display text-4xl text-accent">Message sent!</p>
         <p class="prose-ink mx-auto">Thanks for reaching out. I'll reply to your email as soon as I can.</p>
-        <button type="button" id="contact-reset" class="btn btn--secondary btn--small">Send another message</button>
+        <button type="button" id="contact-reset" class="btn btn--secondary btn--small" data-sakuga="impact">Send another message</button>
       </div>
 
       <form id="contact-form" class="space-y-4" data-access-key={accessKey}>
@@ -93,7 +93,7 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || 'e9d46f6d-269e-
 </section>
 
 <script>
-  import { effectsWanted, loadSakuga } from '@/scripts/play';
+  import { effectsWanted, loadSakuga, sakugaDone } from '@/scripts/play';
 
   const form = document.getElementById('contact-form') as HTMLFormElement;
   const success = document.getElementById('contact-success')!;
@@ -174,7 +174,8 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || 'e9d46f6d-269e-
     copyBtn.addEventListener('click', async () => {
       try {
         await navigator.clipboard.writeText(copyBtn.dataset.email!);
-        copyLabel.textContent = 'Copied ✓';
+        copyLabel.textContent = 'Copied';
+        sakugaDone(copyBtn);
       } catch {
         copyLabel.textContent = 'Selected: copy it';
         const range = document.createRange();
