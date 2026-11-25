@@ -237,7 +237,9 @@ export const projects: Project[] = [
 ];
 
 export const featuredProjects = projects.filter((p) => p.featured);
-export const otherProjects = projects.filter((p) => !p.featured);
+/** Software first: hardware builds go to the end of the list (applying for software roles). */
+const hardwareLast = (p: Project) => (p.categories[0] === 'Hardware' ? 1 : 0);
+export const otherProjects = projects.filter((p) => !p.featured).sort((a, b) => hardwareLast(a) - hardwareLast(b));
 
 /** Filter tabs: a category gets a tab only when at least 2 projects carry it. */
 const MIN_PER_TAB = 2;

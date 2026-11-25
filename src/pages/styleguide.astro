@@ -11,6 +11,7 @@ import ImageSlot from '@/components/ui/ImageSlot.astro';
 import GlitchName from '@/components/ui/GlitchName.astro';
 import { stats } from '@/data/stats';
 import { projects } from '@/data/projects';
+import { withBase } from '@/lib';
 
 const swatches = [
   { name: 'paper', hex: '#f6f4ee', use: 'Page background' },
@@ -133,7 +134,7 @@ const agrobid = projects.find((p) => p.slug === 'agrobid')!;
     <section class="space-y-6" aria-labelledby="sg-stats">
       <h2 id="sg-stats" class="display text-3xl">Stats (live from data)</h2>
       <Panel class="flex flex-wrap gap-10">
-        {stats.map((s) => <Stat {...s} />)}
+        {stats.map((s) => <Stat {...s} href={s.href && withBase(s.href)} />)}
       </Panel>
     </section>
 

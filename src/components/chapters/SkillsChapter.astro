@@ -20,7 +20,7 @@ import { skillGroups } from '@/data/skills';
             <ul class="mt-2 flex flex-wrap gap-2">
               {g.skills.map((s) => (
                 <li>
-                  <Chip label={s.name} tip={s.usedIn ? `Used in: ${s.usedIn}` : undefined} />
+                  <Chip label={s.name} tip={s.note ?? (s.usedIn && `Used in: ${s.usedIn}`)} />
                 </li>
               ))}
             </ul>

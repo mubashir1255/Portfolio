@@ -36,7 +36,24 @@ const tipId = id ?? `tip-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-').repla
     document.querySelectorAll('.tip:hover, .tip:focus-within').forEach((t) => t.classList.add('tip--closed'));
   });
   const reopen = (e: Event) => (e.currentTarget as Element).classList.remove('tip--closed');
+  // Keep the bubble inside the viewport (chips near the edge on phones).
+  const MARGIN = 8;
+  const place = (e: Event) => {
+    const tip = e.currentTarget as HTMLElement;
+    const bubble = tip.querySelector<HTMLElement>('.tip__bubble');
+    if (!bubble) return;
+    const r = tip.getBoundingClientRect();
+    const center = r.left + r.width / 2;
+    const half = bubble.offsetWidth / 2;
+    const vw = document.documentElement.clientWidth;
+    let shift = 0;
+    if (center - half < MARGIN) shift = MARGIN - (center - half);
+    else if (center + half > vw - MARGIN) shift = vw - MARGIN - (center + half);
+    bubble.style.setProperty('--tip-shift', `${shift}px`);
+  };
   document.querySelectorAll('.tip').forEach((t) => {
+    t.addEventListener('mouseenter', place);
+    t.addEventListener('focusin', place);
     t.addEventListener('mouseleave', reopen);
     t.addEventListener('focusout', reopen);
   });

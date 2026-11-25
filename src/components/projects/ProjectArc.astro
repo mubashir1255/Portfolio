@@ -19,7 +19,7 @@ const headingId = `project-${p.slug}-title`;
 
 <Panel as="article" id={`project-${p.slug}`} class="project space-y-8 !p-5 sm:!p-8" data-categories={p.categories.join(' ')} aria-labelledby={headingId}>
   <div class="grid gap-8 lg:grid-cols-[1.2fr_1fr]">
-    <ImageSlot image={p.image} alt={p.imageAlt} placeholder={`TODO: ${p.title} screenshot`} />
+    <ImageSlot image={p.image} alt={p.imageAlt} placeholder={`TODO: ${p.title} screenshot`} sizes="(min-width: 1024px) 560px, calc(100vw - 5rem)" />
     <div class="space-y-4">
       <p class="kicker">Arc {String(arc).padStart(2, '0')} · {p.meta}</p>
       <h3 id={headingId} class="display text-4xl sm:text-5xl">{p.title}</h3>

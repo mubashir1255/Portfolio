@@ -5,7 +5,10 @@
  */
 export interface Skill {
   name: string;
+  /** projects or roles; shown as "Used in: …" */
   usedIn?: string;
+  /** free-form tooltip instead of "Used in: …" */
+  note?: string;
 }
 export interface SkillGroup {
   title: string;
@@ -43,8 +46,8 @@ export const skillGroups: SkillGroup[] = [
     tagline: 'Containers, servers and the infrastructure they run on.',
     skills: [
       { name: 'AWS', usedIn: 'AgroBid Pakistan' },
-      { name: 'Docker' }, // TODO: Mubashir to add where you used Docker
-      { name: 'Linux' }, // TODO: Mubashir to add where you used Linux
+      { name: 'Docker' }, // TODO: Mubashir to add where you used Docker (gives the chip a tooltip)
+      { name: 'Linux', note: 'Daily driver: Zorin OS. Kali and Ubuntu VMs for security labs' },
       { name: 'Offline-first PWAs', usedIn: 'Asaan Udhaar, AgroBid Pakistan' },
     ],
   },
