@@ -8,6 +8,7 @@ import SkillsChapter from '@/components/chapters/SkillsChapter.astro';
 import JourneyChapter from '@/components/chapters/JourneyChapter.astro';
 import ContactChapter from '@/components/chapters/ContactChapter.astro';
 import Footer from '@/components/Footer.astro';
+import Globe from '@/components/Globe.astro';
 import { person, socials, email } from '@/data/site';
 import { skillGroups } from '@/data/skills';
 import { withBase } from '@/lib';
@@ -34,6 +35,7 @@ const personLd = {
   description="Mubashir Fayyaz: full stack developer (Next.js, Supabase, TypeScript) working across cloud, AI automation and security. Projects, experience and contact."
 >
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(personLd)} />
+  <Globe />
   <Nav />
   <main id="main">
     <Hero />

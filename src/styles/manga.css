@@ -57,7 +57,7 @@ html {
   scroll-padding-top: 5rem; /* clears the sticky nav for anchor jumps */
 }
 body {
-  background: var(--color-paper);
+  /* paper comes from <html> (the canvas), so the fixed background globe can sit behind the page */
   color: var(--color-ink);
   font-family: var(--font-sans);
   line-height: 1.6;
@@ -1166,4 +1166,40 @@ sakuga-tabs {
   .nav-links a:focus-visible::after {
     transform: scaleX(1);
   }
+}
+
+/* ── Background globe: fixed, faint, behind everything; panels cover it ── */
+.bg-globe {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  pointer-events: none;
+}
+.bg-globe__art {
+  margin: 0;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, "DejaVu Sans Mono", Consolas, monospace;
+  font-weight: 700;
+  line-height: 1;
+  white-space: pre;
+  user-select: none;
+  font-size: calc(min(74vh, 92vw) / (var(--cols) * 0.6));
+  color: rgb(20 18 15 / 0.2);
+}
+.bg-globe__art b {
+  font-weight: inherit;
+  color: rgb(0 87 255 / 0.5);
+}
+.bg-globe__art i {
+  font-style: normal;
+  color: var(--color-accent);
+}
+
+/* The hero keeps calm halftone even in Play mode, so the globe behind it reads clearly. */
+.hero__dots {
+  --dot-color: rgb(0 87 255 / 0.12);
+  --dot-size: 1.1px;
+  --dot-gap: 9px;
 }

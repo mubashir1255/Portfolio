@@ -1,0 +1,45 @@
+---
+/**
+ * Background ASCII globe. Fixed behind the page; in Play mode it turns as you scroll.
+ * The first frame is rendered at build time, so it shows without JavaScript too.
+ */
+import { geometry, renderGlobe, START_LON } from '@/lib/globe';
+
+const COLS = 84;
+const html = renderGlobe(geometry(COLS), START_LON);
+---
+
+<div class="bg-globe" aria-hidden="true">
+  <pre class="bg-globe__art" style={`--cols: ${COLS}`} data-cols={COLS} set:html={html} />
+</div>
+
+<script>
+  import { geometry, renderGlobe, START_LON } from '@/lib/globe';
+  import { effectsWanted, onPlayChange } from '@/scripts/play';
+
+  const pre = document.querySelector<HTMLElement>('.bg-globe__art');
+  if (pre) {
+    const g = geometry(Number(pre.dataset.cols));
+    const DEG_PER_PX = 0.09; // about one full turn per 4000px of scrolling
+    let last = START_LON;
+    let queued = false;
+
+    const draw = () => {
+      queued = false;
+      // scrolling down turns it the way the Earth turns: continents move left to right
+      const lon = effectsWanted() ? START_LON - scrollY * DEG_PER_PX : START_LON;
+      const step = Math.round(lon * 2) / 2; // redraw only when it moved half a degree
+      if (step === last) return;
+      last = step;
+      pre.innerHTML = renderGlobe(g, step);
+    };
+    const queue = () => {
+      if (!queued) {
+        queued = true;
+        requestAnimationFrame(draw);
+      }
+    };
+    addEventListener('scroll', queue, { passive: true });
+    onPlayChange(queue);
+  }
+</script>
