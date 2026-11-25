@@ -1,0 +1,23 @@
+---
+/** "01 / Chapter 01 / PROJECTS" with a vertical Japanese label. The label is decoration only. */
+interface Props {
+  num: number;
+  title: string;
+  /** Japanese label, e.g. 作品. Must use characters in the subset font (src/assets/fonts). */
+  jp: string;
+  /** id for the <h2>, so the section can use aria-labelledby */
+  headingId: string;
+}
+
+const { num, title, jp, headingId } = Astro.props;
+const pad = String(num).padStart(2, '0');
+---
+
+<header class="chapter-head">
+  <span class="chapter-head__num" aria-hidden="true">{pad}</span>
+  <div>
+    <p class="kicker">Chapter {pad}</p>
+    <h2 id={headingId} class="chapter-head__title">{title}</h2>
+  </div>
+  <span class="jp chapter-head__jp" lang="ja" aria-hidden="true">{jp}</span>
+</header>

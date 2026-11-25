@@ -1,0 +1,15 @@
+---
+/** The hero name. Glitches once on load and on hover; still under reduced motion. Use once per site. */
+interface Props {
+  text: string;
+  class?: string;
+}
+
+const { text, class: cls } = Astro.props;
+---
+
+<span class:list={['glitch', cls]}>
+  <span>{text}</span>
+  <span class="glitch__layer glitch__layer--a" aria-hidden="true">{text}</span>
+  <span class="glitch__layer glitch__layer--b" aria-hidden="true">{text}</span>
+</span>

@@ -1,0 +1,621 @@
+@import "tailwindcss";
+
+/*
+ * Manga Volume design system.
+ * Rule: the page stays quiet. Things only "go boom" when the visitor does something.
+ * Every colour, font and size lives in the tokens below; components only reference tokens.
+ */
+
+@font-face {
+  font-family: "Noto Sans JP Labels";
+  /* Subset to the few label characters used on the site (see src/assets/fonts). */
+  src: url("../assets/fonts/noto-sans-jp-labels.woff2") format("woff2");
+  font-weight: 800;
+  font-display: swap;
+}
+
+@theme {
+  /* Paper & ink */
+  --color-paper: #f6f4ee;
+  --color-paper-deep: #ebe7dc;
+  --color-sheet: #fffdf8;
+  --color-ink: #14120f;
+  --color-ink-soft: #4a453d;
+  --color-ink-faint: #8a8478;
+  /* The one accent. #e63946 for fills, large type and shadows;
+     #b8202c for small text and hover fills (AA on paper and with white text). */
+  --color-accent: #e63946;
+  --color-accent-ink: #b8202c;
+
+  --font-display: "Anton", "Impact", "Arial Narrow", sans-serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-jp: "Noto Sans JP Labels", "Hiragino Sans", "Yu Gothic", sans-serif;
+}
+
+:root {
+  --line: 3px;            /* panel border */
+  --line-thin: 2px;       /* chips, inputs */
+  --shadow-offset: 6px;   /* hard comic shadow, no blur */
+  --radius: 4px;
+
+  /* Halftone dots */
+  --dot-color: rgb(20 18 15 / 0.13);
+  --dot-size: 1.1px;
+  --dot-gap: 9px;
+
+  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Play mode (opt-in, set on <html> by the nav switch): louder halftone, bigger tilts. */
+:root[data-play="on"] {
+  --dot-color: rgb(20 18 15 / 0.22);
+  --dot-size: 1.6px;
+  --dot-gap: 7px;
+}
+
+/* ── Base ─────────────────────────────────────────────── */
+html {
+  color-scheme: light;
+  background: var(--color-paper);
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem; /* clears the sticky nav for anchor jumps */
+}
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+}
+a {
+  text-underline-offset: 0.18em;
+}
+
+/* ── Typography ───────────────────────────────────────── */
+@layer components {
+  .display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    line-height: 0.95;
+  }
+  .kicker {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-accent-ink);
+  }
+  .jp {
+    font-family: var(--font-jp);
+    font-weight: 800;
+    letter-spacing: 0.05em;
+  }
+  .prose-ink {
+    color: var(--color-ink-soft);
+    max-width: 62ch;
+  }
+  .ink-link {
+    color: var(--color-ink);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent);
+    text-decoration-thickness: 2px;
+  }
+  .ink-link:hover {
+    color: var(--color-accent-ink);
+  }
+}
+
+/* ── Halftone ─────────────────────────────────────────── */
+@layer components {
+  .halftone {
+    background-image: radial-gradient(
+      circle,
+      var(--dot-color) var(--dot-size),
+      transparent calc(var(--dot-size) + 0.6px)
+    );
+    background-size: var(--dot-gap) var(--dot-gap);
+    transition: background-size 0.35s ease;
+  }
+  /* Dots fade out towards one corner, like screentone cut with a knife. */
+  .halftone--fade {
+    mask-image: linear-gradient(135deg, #000 10%, transparent 75%);
+  }
+  /* Denser on hover: used on image frames. */
+  .halftone--hover:hover,
+  .halftone--hover:focus-within {
+    --dot-gap: 6px;
+    --dot-size: 1.4px;
+  }
+}
+
+/* ── Panels ───────────────────────────────────────────── */
+@layer components {
+  .panel {
+    position: relative;
+    background-color: var(--color-sheet);
+    border: var(--line) solid var(--color-ink);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--color-ink);
+    padding: 1.5rem;
+    transition:
+      transform 0.25s var(--ease-pop),
+      box-shadow 0.25s var(--ease-pop);
+  }
+  .panel--ink {
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--color-accent);
+  }
+  .panel--accent-shadow {
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--color-accent);
+  }
+  /* Hand-made feel; never on text-heavy blocks. */
+  .panel--tilt-left {
+    transform: rotate(-0.7deg);
+  }
+  .panel--tilt-right {
+    transform: rotate(0.8deg);
+  }
+  /* Interactive panels lift towards the reader. */
+  .panel--lift:hover,
+  .panel--lift:focus-within {
+    transform: translate(-3px, -3px);
+    box-shadow: calc(var(--shadow-offset) + 3px) calc(var(--shadow-offset) + 3px) 0 var(--color-ink);
+  }
+  :root[data-play="on"] .panel--lift:hover {
+    transform: translate(-4px, -4px) rotate(-1.5deg);
+  }
+  /* A halftone panel keeps a solid sheet colour under the dots. */
+  .panel.halftone {
+    background-color: var(--color-sheet);
+  }
+}
+
+/* ── Chapter header ───────────────────────────────────── */
+@layer components {
+  .chapter-head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: end;
+    gap: 0.75rem 1.25rem;
+    border-bottom: var(--line) solid var(--color-ink);
+    padding-bottom: 0.75rem;
+  }
+  .chapter-head__num {
+    font-family: var(--font-display);
+    font-size: clamp(3.5rem, 10vw, 6rem);
+    line-height: 0.8;
+    color: var(--color-accent);
+    -webkit-text-stroke: 2px var(--color-ink);
+  }
+  .chapter-head__title {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    line-height: 0.95;
+  }
+  .chapter-head__jp {
+    align-self: start;
+    writing-mode: vertical-rl;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    padding: 0.6rem 0.35rem;
+    font-size: 1.25rem;
+    border-radius: 2px;
+  }
+}
+
+/* ── Speech bubbles ───────────────────────────────────── */
+@layer components {
+  .bubble {
+    position: relative;
+    display: inline-block;
+    background: var(--color-sheet);
+    border: var(--line) solid var(--color-ink);
+    border-radius: 1.4rem;
+    padding: 0.85rem 1.15rem;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  /* Tail: an ink triangle with a paper triangle inside it. */
+  .bubble--tail-left::before,
+  .bubble--tail-left::after,
+  .bubble--tail-right::before,
+  .bubble--tail-right::after,
+  .bubble--tail-down::before,
+  .bubble--tail-down::after {
+    content: "";
+    position: absolute;
+    border-style: solid;
+    border-color: transparent;
+  }
+  .bubble--tail-left::before {
+    left: 1.4rem;
+    bottom: -18px;
+    border-width: 18px 18px 0 0;
+    border-top-color: var(--color-ink);
+  }
+  .bubble--tail-left::after {
+    left: calc(1.4rem + 3px);
+    bottom: -12px;
+    border-width: 12px 12px 0 0;
+    border-top-color: var(--color-sheet);
+  }
+  .bubble--tail-right::before {
+    right: 1.4rem;
+    bottom: -18px;
+    border-width: 18px 0 0 18px;
+    border-top-color: var(--color-ink);
+  }
+  .bubble--tail-right::after {
+    right: calc(1.4rem + 3px);
+    bottom: -12px;
+    border-width: 12px 0 0 12px;
+    border-top-color: var(--color-sheet);
+  }
+  .bubble--tail-down::before {
+    left: 50%;
+    bottom: -14px;
+    translate: -50% 0;
+    border-width: 14px 10px 0;
+    border-top-color: var(--color-ink);
+  }
+  .bubble--tail-down::after {
+    left: 50%;
+    bottom: -9px;
+    translate: -50% 0;
+    border-width: 9px 6px 0;
+    border-top-color: var(--color-sheet);
+  }
+  /* Shout: spiky outline, for one-word exclamations only. */
+  .bubble--shout {
+    border: none;
+    border-radius: 0;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 1.5rem 2.2rem;
+    clip-path: polygon(
+      0% 18%, 12% 22%, 8% 0%, 26% 14%, 36% 2%, 46% 16%, 60% 0%, 66% 15%, 84% 4%, 82% 22%,
+      100% 20%, 90% 40%, 100% 56%, 88% 64%, 98% 86%, 78% 80%, 72% 100%, 58% 84%, 46% 98%,
+      38% 82%, 20% 96%, 20% 78%, 0% 84%, 10% 62%, 0% 46%, 10% 36%
+    );
+  }
+  /* Narration caption: the rectangular box in a panel corner. */
+  .caption-box {
+    display: inline-block;
+    background: var(--color-paper-deep);
+    border: var(--line-thin) solid var(--color-ink);
+    padding: 0.4rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+}
+
+/* ── Buttons (native; sakuga-vfx upgrades some of these in Play mode) ── */
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.9rem;
+    padding: 0.6rem 1.3rem;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+    line-height: 1;
+    border: var(--line) solid var(--color-ink);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition:
+      transform 0.15s var(--ease-pop),
+      box-shadow 0.15s var(--ease-pop),
+      background-color 0.15s ease;
+  }
+  .btn:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 transparent;
+  }
+  .btn--primary {
+    background: var(--color-ink);
+    color: var(--color-paper);
+    box-shadow: 4px 4px 0 var(--color-accent);
+  }
+  .btn--primary:hover {
+    background: var(--color-accent-ink);
+    color: #fff;
+  }
+  .btn--secondary {
+    background: var(--color-sheet);
+    color: var(--color-ink);
+    box-shadow: 4px 4px 0 var(--color-ink);
+  }
+  .btn--secondary:hover {
+    background: var(--color-paper-deep);
+  }
+  .btn--small {
+    min-height: 2.3rem;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.9rem;
+    border-width: var(--line-thin);
+    box-shadow: 3px 3px 0 var(--color-ink);
+  }
+}
+
+/* ── Chips, tags, badges ──────────────────────────────── */
+@layer components {
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    background: var(--color-sheet);
+    color: var(--color-ink);
+    border: var(--line-thin) solid var(--color-ink);
+    border-radius: 999px;
+  }
+  .chip--tip {
+    cursor: help;
+  }
+  .chip--tip:hover,
+  .chip--tip:focus-visible {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+  .tag {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border: 1.5px solid var(--color-ink);
+    border-radius: 2px;
+    color: var(--color-ink);
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    border-radius: 2px;
+  }
+  .badge--accent {
+    background: var(--color-accent-ink);
+    color: #fff;
+  }
+}
+
+/* ── Tooltip: a speech bubble above a chip, on hover and focus ── */
+@layer components {
+  .tip {
+    position: relative;
+    display: inline-flex;
+  }
+  .tip__bubble {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 16px);
+    z-index: 20;
+    width: max-content;
+    max-width: min(16rem, 80vw);
+    padding: 0.55rem 0.8rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.35;
+    text-align: center;
+    border-radius: 1rem;
+    pointer-events: none;
+    opacity: 0;
+    translate: -50% 6px;
+    scale: 0.85;
+    transform-origin: 50% 100%;
+    transition:
+      opacity 0.15s ease,
+      translate 0.2s var(--ease-pop),
+      scale 0.2s var(--ease-pop);
+  }
+  .tip:hover .tip__bubble,
+  .tip:focus-within .tip__bubble {
+    opacity: 1;
+    translate: -50% 0;
+    scale: 1;
+  }
+  /* Escape dismisses the bubble until the pointer or focus leaves (WCAG 1.4.13). */
+  .tip.tip--closed .tip__bubble {
+    opacity: 0;
+  }
+}
+
+/* ── Stats ────────────────────────────────────────────── */
+@layer components {
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    color: inherit;
+    text-decoration: none;
+  }
+  .stat__value {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 6vw, 3rem);
+    line-height: 1;
+  }
+  .stat__label {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+  }
+  a.stat:hover .stat__value {
+    color: var(--color-accent-ink);
+  }
+}
+
+/* ── Image frames & placeholders ──────────────────────── */
+@layer components {
+  .frame {
+    position: relative;
+    overflow: hidden;
+    border: var(--line) solid var(--color-ink);
+    border-radius: var(--radius);
+    background-color: var(--color-paper-deep);
+  }
+  .frame > img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  /* Dots over the screenshot, denser on hover. */
+  .frame.halftone--hover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(
+      circle,
+      rgb(20 18 15 / 0.18) var(--dot-size),
+      transparent calc(var(--dot-size) + 0.6px)
+    );
+    background-size: var(--dot-gap) var(--dot-gap);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .frame.halftone--hover:hover::after {
+    opacity: 1;
+  }
+  .slot {
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 1rem;
+    border-style: dashed;
+  }
+  .slot__label {
+    background: var(--color-sheet);
+    border: var(--line-thin) solid var(--color-ink);
+    padding: 0.35rem 0.7rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+  }
+}
+
+/* ── Hero effects: speed lines & glitch (hero name only) ── */
+@layer components {
+  .speed-lines {
+    position: absolute;
+    inset: -20%;
+    pointer-events: none;
+    background: repeating-conic-gradient(
+      from 0deg at 50% 50%,
+      var(--color-ink) 0deg 0.9deg,
+      transparent 0.9deg 5deg
+    );
+    mask-image: radial-gradient(circle at 50% 50%, transparent 30%, #000 72%);
+    opacity: 0.08;
+  }
+
+  .glitch {
+    position: relative;
+    display: inline-block;
+  }
+  .glitch__layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+  }
+  .glitch__layer--a {
+    color: var(--color-accent);
+    animation: glitch-a 0.65s steps(1, end) 0.4s 1 both;
+  }
+  .glitch__layer--b {
+    color: var(--color-ink-faint);
+    animation: glitch-b 0.65s steps(1, end) 0.4s 1 both;
+  }
+  /* A different animation name restarts it on hover. */
+  .glitch:hover .glitch__layer--a {
+    animation-name: glitch-a-again;
+    animation-delay: 0s;
+  }
+  .glitch:hover .glitch__layer--b {
+    animation-name: glitch-b-again;
+    animation-delay: 0s;
+  }
+}
+
+@keyframes glitch-a {
+  0% { opacity: 1; clip-path: inset(10% 0 70% 0); translate: -4px 0; }
+  20% { clip-path: inset(55% 0 20% 0); translate: 4px 0; }
+  40% { clip-path: inset(30% 0 50% 0); translate: -3px 0; }
+  60% { clip-path: inset(75% 0 5% 0); translate: 3px 0; }
+  80% { clip-path: inset(0 0 85% 0); translate: -2px 0; }
+  100% { opacity: 0; clip-path: inset(0 0 100% 0); translate: 0 0; }
+}
+@keyframes glitch-b {
+  0% { opacity: 1; clip-path: inset(65% 0 10% 0); translate: 3px 0; }
+  20% { clip-path: inset(5% 0 75% 0); translate: -4px 0; }
+  40% { clip-path: inset(45% 0 35% 0); translate: 2px 0; }
+  60% { clip-path: inset(20% 0 60% 0); translate: -3px 0; }
+  80% { clip-path: inset(85% 0 0 0); translate: 2px 0; }
+  100% { opacity: 0; clip-path: inset(0 0 100% 0); translate: 0 0; }
+}
+@keyframes glitch-a-again {
+  0% { opacity: 1; clip-path: inset(10% 0 70% 0); translate: -4px 0; }
+  25% { clip-path: inset(55% 0 20% 0); translate: 4px 0; }
+  50% { clip-path: inset(30% 0 50% 0); translate: -3px 0; }
+  75% { clip-path: inset(0 0 85% 0); translate: 2px 0; }
+  100% { opacity: 0; clip-path: inset(0 0 100% 0); translate: 0 0; }
+}
+@keyframes glitch-b-again {
+  0% { opacity: 1; clip-path: inset(65% 0 10% 0); translate: 3px 0; }
+  25% { clip-path: inset(5% 0 75% 0); translate: -4px 0; }
+  50% { clip-path: inset(45% 0 35% 0); translate: 2px 0; }
+  75% { clip-path: inset(85% 0 0 0); translate: -2px 0; }
+  100% { opacity: 0; clip-path: inset(0 0 100% 0); translate: 0 0; }
+}
+
+/* ── Reduced motion: no glitch, no pops, no halftone animation ── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .glitch__layer {
+    display: none;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  .panel--lift:hover,
+  :root[data-play="on"] .panel--lift:hover {
+    transform: none;
+  }
+}

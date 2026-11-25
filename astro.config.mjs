@@ -8,7 +8,7 @@ export default defineConfig({
   site: process.env.SITE_URL ?? 'https://mubashir1255.github.io',
   base: process.env.BASE_PATH ?? '/',
   output: 'static',
-  integrations: [sitemap()],
+  integrations: [sitemap({ filter: (page) => !page.includes('/styleguide') })],
   server: { host: true },
   vite: { plugins: [tailwindcss()] },
 });

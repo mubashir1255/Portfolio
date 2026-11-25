@@ -1,0 +1,40 @@
+---
+/**
+ * Native link or button in the comic style. `sakuga` marks it for the Play-mode upgrade:
+ * with Play mode off (or no JS) it stays exactly this element.
+ */
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary';
+  size?: 'default' | 'small';
+  type?: 'button' | 'submit';
+  /** opens in a new tab with rel="noopener" */
+  external?: boolean;
+  download?: boolean | string;
+  /** 'impact' = full burst, 'done' = burst then a check (e.g. resume download) */
+  sakuga?: 'impact' | 'done';
+  class?: string;
+  [key: `data-${string}`]: string | undefined;
+  'aria-label'?: string;
+  id?: string;
+}
+
+const { href, variant = 'primary', size = 'default', type = 'button', external, download, sakuga, class: cls, ...rest } = Astro.props;
+const classes = ['btn', `btn--${variant}`, size === 'small' && 'btn--small', cls];
+const linkAttrs: HTMLAttributes<'a'> = external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+---
+
+{
+  href ? (
+    <a href={href} class:list={classes} data-sakuga={sakuga} download={download} {...linkAttrs} {...rest}>
+      <slot />
+      {external && <span class="sr-only">(opens in a new tab)</span>}
+    </a>
+  ) : (
+    <button type={type} class:list={classes} data-sakuga={sakuga} {...rest}>
+      <slot />
+    </button>
+  )
+}

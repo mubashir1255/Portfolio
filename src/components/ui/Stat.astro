@@ -1,0 +1,16 @@
+---
+/** A big number with a label. Values must be provable from the page (see src/data/stats.ts). */
+interface Props {
+  value: string | number;
+  label: string;
+  href?: string;
+}
+
+const { value, label, href } = Astro.props;
+const Tag = href ? 'a' : 'div';
+---
+
+<Tag class="stat" href={href}>
+  <span class="stat__value">{value}</span>
+  <span class="stat__label">{label}</span>
+</Tag>

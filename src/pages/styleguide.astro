@@ -1,0 +1,165 @@
+---
+/** Every design-system piece on one page. Not in the sitemap, noindex. */
+import Layout from '@/layouts/Layout.astro';
+import Panel from '@/components/ui/Panel.astro';
+import ChapterHeader from '@/components/ui/ChapterHeader.astro';
+import SpeechBubble from '@/components/ui/SpeechBubble.astro';
+import Button from '@/components/ui/Button.astro';
+import Chip from '@/components/ui/Chip.astro';
+import Stat from '@/components/ui/Stat.astro';
+import ImageSlot from '@/components/ui/ImageSlot.astro';
+import GlitchName from '@/components/ui/GlitchName.astro';
+import { stats } from '@/data/stats';
+import { projects } from '@/data/projects';
+
+const swatches = [
+  { name: 'paper', hex: '#f6f4ee', use: 'Page background' },
+  { name: 'paper-deep', hex: '#ebe7dc', use: 'Captions, empty frames' },
+  { name: 'sheet', hex: '#fffdf8', use: 'Panel fill' },
+  { name: 'ink', hex: '#14120f', use: 'Text, borders, shadows' },
+  { name: 'ink-soft', hex: '#4a453d', use: 'Body copy (9.4:1 on paper)' },
+  { name: 'accent', hex: '#e63946', use: 'Fills, large type, shadows only (3.7:1)' },
+  { name: 'accent-ink', hex: '#b8202c', use: 'Small red text, hover fills (5.8:1)' },
+];
+const agrobid = projects.find((p) => p.slug === 'agrobid')!;
+---
+
+<Layout title="Styleguide · Manga Volume" description="Design system for the portfolio." noindex>
+  <main id="main" class="mx-auto max-w-4xl space-y-20 px-5 py-16">
+    <header class="space-y-3">
+      <p class="kicker">Design system</p>
+      <h1 class="display text-6xl">Styleguide</h1>
+      <p class="prose-ink">
+        The page stays quiet. Things only go boom when the visitor does something. Toggle Play mode below to see the
+        louder halftone and tilt.
+      </p>
+      <label class="inline-flex items-center gap-2 font-semibold">
+        <input type="checkbox" id="sg-play" class="h-5 w-5 accent-[var(--color-ink)]" /> Play mode (preview)
+      </label>
+    </header>
+
+    <section class="space-y-6" aria-labelledby="sg-color">
+      <h2 id="sg-color" class="display text-3xl">Colour</h2>
+      <ul class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        {
+          swatches.map((s) => (
+            <li class="panel !p-0">
+              <div class="h-20 border-b-[3px] border-ink" style={`background:${s.hex}`} />
+              <div class="p-3 text-sm">
+                <p class="font-bold">{s.name}</p>
+                <p class="font-mono text-ink-soft">{s.hex}</p>
+                <p class="mt-1 text-ink-soft">{s.use}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="space-y-6" aria-labelledby="sg-type">
+      <h2 id="sg-type" class="display text-3xl">Type</h2>
+      <Panel class="space-y-4">
+        <p class="display text-7xl">Anton display</p>
+        <p class="display text-4xl">Headings only, never body</p>
+        <p class="kicker">Kicker · Inter 700 caps</p>
+        <p class="prose-ink">
+          Body copy is Inter. It stays readable at 16px on paper and never uses the display face. Links look like <a class="ink-link" href="#sg-type">this one</a>.
+        </p>
+        <p class="jp text-3xl" lang="ja">経験 作品 戦闘力 旅路 連絡 つづく</p>
+        <p class="text-sm text-ink-soft">Japanese labels: Noto Sans JP, subset to these characters (7 KB). Decorative only.</p>
+      </Panel>
+    </section>
+
+    <section class="space-y-6" aria-labelledby="sg-chapter">
+      <h2 id="sg-chapter" class="display text-3xl">Chapter header</h2>
+      <ChapterHeader num={2} title="Projects" jp="作品" headingId="sg-chapter-demo" />
+    </section>
+
+    <section class="space-y-6" aria-labelledby="sg-panels">
+      <h2 id="sg-panels" class="display text-3xl">Panels</h2>
+      <div class="grid gap-8 sm:grid-cols-2">
+        <Panel><p class="font-bold">Default</p><p class="text-sm text-ink-soft">Sheet fill, 3px ink, 6px hard shadow.</p></Panel>
+        <Panel tone="ink"><p class="font-bold">Ink</p><p class="text-sm opacity-80">For the "Now" panel and the finale.</p></Panel>
+        <Panel tilt="left" halftone><p class="font-bold">Tilt left + halftone</p><p class="text-sm text-ink-soft">Short cards only.</p></Panel>
+        <Panel tilt="right" accentShadow lift tabindex="0"><p class="font-bold">Tilt right + accent shadow + lift</p><p class="text-sm text-ink-soft">Hover or focus me.</p></Panel>
+      </div>
+      <div class="relative h-32 overflow-hidden rounded border-[3px] border-ink"><div class="halftone halftone--fade absolute inset-0"></div></div>
+      <p class="text-sm text-ink-soft">Halftone with fade: hero background.</p>
+    </section>
+
+    <section class="space-y-8" aria-labelledby="sg-bubbles">
+      <h2 id="sg-bubbles" class="display text-3xl">Speech bubbles</h2>
+      <div class="flex flex-wrap items-start gap-10">
+        <SpeechBubble>Tail left: default.</SpeechBubble>
+        <SpeechBubble tail="right">Tail right.</SpeechBubble>
+        <SpeechBubble tail="down">Tail down.</SpeechBubble>
+        <SpeechBubble variant="shout" class="text-3xl">Boom!</SpeechBubble>
+        <SpeechBubble variant="caption">Meanwhile, in Lahore…</SpeechBubble>
+      </div>
+    </section>
+
+    <section class="space-y-6" aria-labelledby="sg-buttons">
+      <h2 id="sg-buttons" class="display text-3xl">Buttons</h2>
+      <div class="flex flex-wrap gap-5">
+        <Button sakuga="impact">View projects</Button>
+        <Button variant="secondary" sakuga="done">Download resume</Button>
+        <Button size="small" variant="secondary">Source</Button>
+        <Button href="https://example.com" external size="small">Live demo</Button>
+      </div>
+      <p class="text-sm text-ink-soft">
+        Native elements. <code>data-sakuga</code> marks the ones that get the sakuga-vfx burst in Play mode (Phase 3).
+      </p>
+    </section>
+
+    <section class="space-y-6" aria-labelledby="sg-chips">
+      <h2 id="sg-chips" class="display text-3xl">Chips, tags, badges</h2>
+      <div class="flex flex-wrap gap-3 pt-16">
+        <Chip label="Supabase Realtime" tip="Live bids and countdowns in AgroBid Pakistan" />
+        <Chip label="Zustand" tip="Offline state in Asaan Udhaar" id="sg-tip-zustand" />
+        <Chip label="Plain chip" />
+      </div>
+      <div class="flex flex-wrap gap-2">
+        {agrobid.tech.map((t) => <span class="tag">{t}</span>)}
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <span class="badge">Private repo</span>
+        <span class="badge badge--accent">Featured</span>
+      </div>
+      <p class="text-sm text-ink-soft">Tooltips open on hover and keyboard focus; Escape hides them.</p>
+    </section>
+
+    <section class="space-y-6" aria-labelledby="sg-stats">
+      <h2 id="sg-stats" class="display text-3xl">Stats (live from data)</h2>
+      <Panel class="flex flex-wrap gap-10">
+        {stats.map((s) => <Stat {...s} />)}
+      </Panel>
+    </section>
+
+    <section class="space-y-6" aria-labelledby="sg-images">
+      <h2 id="sg-images" class="display text-3xl">Image frames</h2>
+      <div class="grid gap-6 sm:grid-cols-2">
+        <ImageSlot image={agrobid.image} alt={agrobid.imageAlt} />
+        <ImageSlot alt="Qevora POS checkout screen" placeholder="TODO: Qevora POS screenshot" />
+      </div>
+      <p class="text-sm text-ink-soft">Hover a screenshot: the dots get denser. Missing images get a marked slot, never a fake mockup.</p>
+    </section>
+
+    <section class="space-y-6" aria-labelledby="sg-hero">
+      <h2 id="sg-hero" class="display text-3xl">Hero name: speed lines &amp; glitch</h2>
+      <div class="relative overflow-hidden rounded border-[3px] border-ink px-6 py-16 text-center">
+        <div class="speed-lines" aria-hidden="true"></div>
+        <p class="relative display text-[clamp(2.75rem,12vw,6rem)]"><GlitchName text="Mubashir Fayyaz" /></p>
+      </div>
+      <p class="text-sm text-ink-soft">Glitches once on load and on hover. Off under reduced motion. Used only on the hero name.</p>
+    </section>
+  </main>
+
+  <script>
+    const box = document.getElementById('sg-play') as HTMLInputElement;
+    box.checked = document.documentElement.dataset.play === 'on';
+    box.addEventListener('change', () => {
+      if (box.checked) document.documentElement.dataset.play = 'on';
+      else delete document.documentElement.dataset.play;
+    });
+  </script>
+</Layout>

@@ -1,0 +1,43 @@
+---
+/**
+ * A skill chip. With `tip`, it becomes focusable and shows a speech-bubble tooltip
+ * on hover and focus; Escape hides it (WCAG 1.4.13).
+ */
+interface Props {
+  label: string;
+  tip?: string;
+  /** unique id for the tooltip; defaults to one built from the label */
+  id?: string;
+}
+
+const { label, tip, id } = Astro.props;
+const tipId = id ?? `tip-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
+---
+
+{
+  tip ? (
+    <span class="tip">
+      <button type="button" class="chip chip--tip" aria-describedby={tipId}>
+        {label}
+      </button>
+      <span role="tooltip" id={tipId} class="tip__bubble bubble bubble--tail-down">
+        {tip}
+      </span>
+    </span>
+  ) : (
+    <span class="chip">{label}</span>
+  )
+}
+
+<script>
+  // Escape closes an open tooltip; it can open again once the pointer/focus leaves and returns.
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    document.querySelectorAll('.tip:hover, .tip:focus-within').forEach((t) => t.classList.add('tip--closed'));
+  });
+  const reopen = (e: Event) => (e.currentTarget as Element).classList.remove('tip--closed');
+  document.querySelectorAll('.tip').forEach((t) => {
+    t.addEventListener('mouseleave', reopen);
+    t.addEventListener('focusout', reopen);
+  });
+</script>

@@ -1,0 +1,33 @@
+---
+/** A comic panel: thick ink border, hard offset shadow. Tilt only on short, non-text-heavy cards. */
+import type { HTMLAttributes } from 'astro/types';
+
+type Tag = 'div' | 'article' | 'section' | 'aside' | 'li' | 'figure';
+interface Props extends HTMLAttributes<'div'> {
+  as?: Tag;
+  tilt?: 'left' | 'right';
+  tone?: 'sheet' | 'ink';
+  /** screentone dots behind the content */
+  halftone?: boolean;
+  /** lifts towards the reader on hover/focus (for interactive cards) */
+  lift?: boolean;
+  accentShadow?: boolean;
+}
+
+const { as: Tag = 'div', tilt, tone = 'sheet', halftone = false, lift = false, accentShadow = false, class: cls, ...rest } = Astro.props;
+---
+
+<Tag
+  class:list={[
+    'panel',
+    tilt && `panel--tilt-${tilt}`,
+    tone === 'ink' && 'panel--ink',
+    halftone && 'halftone',
+    lift && 'panel--lift',
+    accentShadow && 'panel--accent-shadow',
+    cls,
+  ]}
+  {...rest}
+>
+  <slot />
+</Tag>

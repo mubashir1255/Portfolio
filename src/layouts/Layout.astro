@@ -1,0 +1,39 @@
+---
+/** Layout for the Manga Volume design. Full SEO/OG/JSON-LD lands in Phase 3/5. */
+import '@fontsource/anton/400.css';
+import '@fontsource-variable/inter';
+import '@/styles/manga.css';
+import { withBase } from '@/lib';
+
+interface Props {
+  title: string;
+  description: string;
+  /** keep the page out of search engines (styleguide) */
+  noindex?: boolean;
+}
+
+const { title, description, noindex = false } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="icon" href={withBase('favicon.ico')} sizes="any" />
+    <meta name="theme-color" content="#f6f4ee" />
+    <!-- Restore Play mode before first paint so the page doesn't flash. -->
+    <script is:inline>
+      try {
+        if (localStorage.getItem('play-mode') === 'on') document.documentElement.dataset.play = 'on';
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <a href="#main" class="btn btn--primary sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50">Skip to content</a>
+    <slot />
+  </body>
+</html>
