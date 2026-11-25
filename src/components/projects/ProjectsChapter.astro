@@ -1,0 +1,89 @@
+---
+import ChapterHeader from '@/components/ui/ChapterHeader.astro';
+import ProjectArc from './ProjectArc.astro';
+import ProjectCard from './ProjectCard.astro';
+import { featuredProjects, otherProjects, projectCategories } from '@/data/projects';
+
+const filters = ['All', ...projectCategories];
+---
+
+<section id="projects" class="chapter wrap space-y-10" aria-labelledby="projects-title">
+  <ChapterHeader num={2} title="Projects" headingId="projects-title" />
+
+  <!-- Filters need JS; without it every project simply shows. -->
+  <div id="project-filter-slot" hidden>
+    <div class="filter" role="group" aria-label="Filter projects" id="project-filter">
+      {filters.map((f, i) => <button type="button" class="filter__btn" data-filter={f} aria-pressed={i === 0 ? 'true' : 'false'}>{f}</button>)}
+    </div>
+    <p class="sr-only" aria-live="polite" id="project-filter-status"></p>
+  </div>
+
+  <div class="space-y-12" data-project-group>
+    <h3 class="kicker">Story arcs</h3>
+    <ol class="space-y-14">
+      {featuredProjects.map((p, i) => <li><ProjectArc project={p} arc={i + 1} /></li>)}
+    </ol>
+  </div>
+
+  <div class="space-y-6" data-project-group>
+    <h3 class="kicker">Side stories</h3>
+    <ul class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {otherProjects.map((p) => <li class="flex"><ProjectCard project={p} /></li>)}
+    </ul>
+  </div>
+</section>
+
+<script>
+  import { onPlayChange, effectsWanted, loadSakuga, isPlay } from '@/scripts/play';
+
+  const slot = document.getElementById('project-filter-slot')!;
+  const native = document.getElementById('project-filter')!;
+  const status = document.getElementById('project-filter-status')!;
+  const buttons = [...native.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+  const filters = buttons.map((b) => b.dataset.filter!);
+  let current = 'All';
+  let tabs: HTMLElement | null = null;
+
+  function apply(filter: string) {
+    current = filter;
+    let shown = 0;
+    document.querySelectorAll<HTMLElement>('[data-project-group]').forEach((group) => {
+      let inGroup = 0;
+      group.querySelectorAll<HTMLElement>('.project').forEach((card) => {
+        const match = filter === 'All' || card.dataset.categories!.split(' ').includes(filter);
+        card.closest('li')!.hidden = !match;
+        if (match) inGroup++;
+      });
+      group.hidden = inGroup === 0;
+      shown += inGroup;
+    });
+    buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filter === filter)));
+    status.textContent = `Showing ${shown} project${shown === 1 ? '' : 's'}`;
+  }
+
+  slot.hidden = false;
+  buttons.forEach((b) => b.addEventListener('click', () => apply(b.dataset.filter!)));
+
+  // Play mode swaps the native buttons for <sakuga-tabs>; off again, the native ones come back.
+  onPlayChange(async () => {
+    if (effectsWanted()) {
+      const fx = await loadSakuga();
+      if (!fx || !isPlay()) return;
+      if (!tabs) {
+        tabs = document.createElement('sakuga-tabs');
+        tabs.setAttribute('label', 'Filter projects');
+        for (const f of filters) tabs.append(Object.assign(document.createElement('option'), { value: f, textContent: f }));
+        tabs.addEventListener('change', (e) => apply((e as CustomEvent<{ value: string }>).detail.value));
+        slot.prepend(tabs);
+      }
+      tabs.setAttribute('selected', String(filters.indexOf(current)));
+      (tabs as HTMLElement & { selected?: number }).selected = filters.indexOf(current);
+      tabs.hidden = false;
+      native.hidden = true;
+    } else {
+      if (tabs) tabs.hidden = true;
+      native.hidden = false;
+      apply(current);
+    }
+  });
+</script>

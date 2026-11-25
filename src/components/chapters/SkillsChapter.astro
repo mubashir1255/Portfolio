@@ -1,0 +1,32 @@
+---
+import ChapterHeader from '@/components/ui/ChapterHeader.astro';
+import Panel from '@/components/ui/Panel.astro';
+import Chip from '@/components/ui/Chip.astro';
+import { skillGroups } from '@/data/skills';
+---
+
+<section id="skills" class="chapter wrap space-y-10" aria-labelledby="skills-title">
+  <ChapterHeader num={3} title="Skills" headingId="skills-title" />
+  <p class="prose-ink">
+    <strong class="text-ink">Power-ups.</strong> Hover, tap or focus a skill to see where I used it.
+  </p>
+  <ul class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+    {
+      skillGroups.map((g) => (
+        <li class="flex">
+          <Panel as="article" class="flex w-full flex-col gap-3">
+            <h3 class="display text-2xl">{g.title}</h3>
+            <p class="text-sm text-ink-soft">{g.tagline}</p>
+            <ul class="mt-2 flex flex-wrap gap-2">
+              {g.skills.map((s) => (
+                <li>
+                  <Chip label={s.name} tip={s.note ?? (s.usedIn && `Used in: ${s.usedIn}`)} />
+                </li>
+              ))}
+            </ul>
+          </Panel>
+        </li>
+      ))
+    }
+  </ul>
+</section>

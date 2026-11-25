@@ -1,56 +1,55 @@
 ---
-import Base from '@/layouts/Base.astro';
-import Background from '@/components/Background.astro';
-import Navbar from '@/components/Navbar.astro';
-import CoverPage from '@/components/book/CoverPage.astro';
-import ContentsPage from '@/components/book/ContentsPage.astro';
-import IntroPage from '@/components/book/IntroPage.astro';
-import AboutPages from '@/components/book/AboutPages.astro';
-import SkillsPages from '@/components/book/SkillsPages.astro';
-import ProjectPage from '@/components/book/ProjectPage.astro';
-import JourneyPage from '@/components/book/JourneyPage.astro';
-import ContactPages from '@/components/book/ContactPages.astro';
-import MoreProjectsPage from '@/components/book/MoreProjectsPage.astro';
-import { projects } from '@/data/content';
-import { ChevronLeft, ChevronRight } from '@lucide/astro';
+import Layout from '@/layouts/Layout.astro';
+import Nav from '@/components/Nav.astro';
+import Hero from '@/components/Hero.astro';
+import ExperienceChapter from '@/components/chapters/ExperienceChapter.astro';
+import ProjectsChapter from '@/components/projects/ProjectsChapter.astro';
+import SkillsChapter from '@/components/chapters/SkillsChapter.astro';
+import JourneyChapter from '@/components/chapters/JourneyChapter.astro';
+import ContactChapter from '@/components/chapters/ContactChapter.astro';
+import Footer from '@/components/Footer.astro';
+import Globe from '@/components/Globe.astro';
+import { person, socials, email } from '@/data/site';
+import { skillGroups } from '@/data/skills';
+import { withBase } from '@/lib';
+
+const siteUrl = new URL(withBase('/'), Astro.site).href;
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: person.name,
+  jobTitle: 'Full Stack Developer',
+  description: person.pitch,
+  url: siteUrl,
+  image: new URL(withBase('og.png'), Astro.site).href,
+  email: `mailto:${email}`,
+  address: { '@type': 'PostalAddress', addressLocality: 'Lahore', addressCountry: 'PK' },
+  affiliation: { '@type': 'CollegeOrUniversity', name: person.university },
+  sameAs: socials.map((s) => s.href),
+  knowsAbout: skillGroups.flatMap((g) => g.skills.map((s) => s.name)),
+};
 ---
 
-<Base>
-  <Background />
-  <Navbar />
-  <main id="main-content" class="book-main">
-    <!-- Interactive book (activated by src/scripts/book.ts) -->
-    <div class="book-root" id="book-root">
-      <button type="button" class="book-arrow" id="book-prev" aria-label="Previous page"><ChevronLeft class="h-6 w-6" /></button>
-      <div class="book-viewport" id="book-viewport">
-        <div class="book-scaler" id="book-scaler">
-          <div class="book" id="book"></div>
-        </div>
-      </div>
-      <button type="button" class="book-arrow" id="book-next" aria-label="Next page"><ChevronRight class="h-6 w-6" /></button>
-    </div>
-    <div class="book-controls">
-      <span class="book-label" id="book-label"></span>
-      <div class="book-dots" id="book-dots"></div>
-      <span class="book-keys">← → to turn</span>
-    </div>
-    <p id="book-status" class="sr-only" aria-live="polite"></p>
-
-    <!-- Every page, in reading order. Without JS these simply stack vertically. -->
-    <div class="book-store" id="book-pages">
-      <CoverPage />
-      <ContentsPage />
-      <IntroPage />
-      <AboutPages />
-      <SkillsPages />
-      {projects.map((p, i) => <ProjectPage p={p} index={i} num={6 + i} />)}
-      <MoreProjectsPage num={6 + projects.length} />
-      <JourneyPage />
-      <ContactPages />
-    </div>
+<Layout
+  title={`${person.name} · Full Stack Developer`}
+  description="Mubashir Fayyaz: full stack developer (Next.js, Supabase, TypeScript) working across cloud, AI automation and security. Projects, experience and contact."
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(personLd)} />
+  <Globe />
+  <Nav />
+  <main id="main">
+    <Hero />
+    <ExperienceChapter />
+    <ProjectsChapter />
+    <SkillsChapter />
+    <JourneyChapter />
+    <ContactChapter />
   </main>
-</Base>
+  <Footer />
+</Layout>
 
 <script>
-  import '@/scripts/motion';
+  // Play-mode entrance motion (anime.js, loaded on demand).
+  import { initMotion } from '@/scripts/motion';
+  initMotion();
 </script>

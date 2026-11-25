@@ -1,0 +1,210 @@
+---
+/**
+ * Chapter 05. The form posts to Web3Forms exactly as the previous site did (same key, honeypot and payload).
+ * Native, styled inputs; in Play mode a sakuga-vfx toast also announces success. Failures always show inline.
+ */
+import ChapterHeader from '@/components/ui/ChapterHeader.astro';
+import Panel from '@/components/ui/Panel.astro';
+import Button from '@/components/ui/Button.astro';
+import { email, socials, person } from '@/data/site';
+
+// Web3Forms access keys are public by design (they can only send to the owner's inbox).
+const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || 'e9d46f6d-269e-455a-a5b0-76effdfb7724';
+---
+
+<section id="contact" class="chapter wrap space-y-10" aria-labelledby="contact-title">
+  <ChapterHeader num={5} title="Contact" headingId="contact-title" />
+
+  <div class="grid gap-10 lg:grid-cols-[1fr_1.3fr]">
+    <div class="space-y-6">
+      <p class="prose-ink text-lg">Open to internships, junior roles and freelance work. Email me or use the form.</p>
+      <Panel class="space-y-4">
+        <p class="kicker">Email</p>
+        <div class="flex flex-wrap items-center gap-3">
+          <a href={`mailto:${email}`} class="ink-link break-all text-lg" id="contact-email">{email}</a>
+          <button type="button" class="btn btn--secondary btn--small" id="copy-email" data-email={email} data-sakuga="impact" data-sakuga-word="kachi" hidden>
+            <span data-copy-label>Copy</span>
+          </button>
+        </div>
+        <ul class="space-y-1 text-sm font-semibold text-ink-soft">
+          <li>{person.location}</li>
+          <li>Usually replies within 24 hours</li>
+        </ul>
+        <ul class="flex gap-5 text-sm" aria-label="Profiles">
+          {
+            socials.map((s) => (
+              <li>
+                <a class="ink-link" href={s.href} target="_blank" rel="noopener noreferrer">
+                  {s.label}
+                  <span class="sr-only">(opens in a new tab)</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </Panel>
+    </div>
+
+    <Panel>
+      <div id="contact-success" class="space-y-4 py-6 text-center" role="status" hidden>
+        <p class="display text-4xl text-accent">Message sent!</p>
+        <p class="prose-ink mx-auto">Thanks for reaching out. I'll reply to your email as soon as I can.</p>
+        <button type="button" id="contact-reset" class="btn btn--secondary btn--small" data-sakuga="impact">Send another message</button>
+      </div>
+
+      <form id="contact-form" class="space-y-4" data-access-key={accessKey}>
+        <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
+        <div id="contact-error" class="caption-box w-full !bg-accent-tint" role="alert" hidden>
+          <p class="font-bold">Couldn't send the message.</p>
+          <p id="contact-error-text" class="font-normal"></p>
+          <a href={`mailto:${email}`} class="ink-link">Email me directly instead</a>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label for="name" class="field-label">Your name <span aria-hidden="true">*</span></label>
+            <input id="name" name="name" type="text" required autocomplete="name" placeholder="Alex Smith" class="field" />
+          </div>
+          <div>
+            <label for="email" class="field-label">Email <span aria-hidden="true">*</span></label>
+            <input id="email" name="email" type="email" required autocomplete="email" placeholder="alex@example.com" class="field" />
+          </div>
+        </div>
+        <div>
+          <label for="subject" class="field-label">Subject</label>
+          <input id="subject" name="subject" type="text" placeholder="Internship / Freelance / Tech chat" class="field" />
+        </div>
+        <div>
+          <label for="message" class="field-label">Message <span aria-hidden="true">*</span></label>
+          <textarea id="message" name="message" rows="5" required placeholder="Hello Mubashir, I'd like to talk about…" class="field resize-y"></textarea>
+        </div>
+        <p class="text-xs text-ink-soft">* required</p>
+        <Button type="submit" class="w-full" id="contact-submit" sakuga="impact">
+          <span data-submit-label>Send message</span>
+        </Button>
+      </form>
+    </Panel>
+  </div>
+
+  <Panel as="div" tone="ink" class="finale">
+    <div class="speed-lines finale__lines" aria-hidden="true"></div>
+    <p class="relative display finale__text">
+      <span class="finale__line">Further info will</span> <span class="finale__line">be revealed <span class="text-accent">soon</span></span>
+    </p>
+  </Panel>
+</section>
+
+<script>
+  import { effectsWanted, loadSakuga, sakugaDone } from '@/scripts/play';
+
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const success = document.getElementById('contact-success')!;
+  const errorBox = document.getElementById('contact-error')!;
+  const errorText = document.getElementById('contact-error-text')!;
+  const submit = document.getElementById('contact-submit') as HTMLButtonElement;
+  const submitLabel = submit.querySelector('[data-submit-label]')!;
+
+  const setBusy = (busy: boolean) => {
+    submit.disabled = busy;
+    submitLabel.textContent = busy ? 'Sending…' : 'Send message';
+  };
+  const showError = (msg: string) => {
+    errorText.textContent = msg;
+    errorBox.hidden = false;
+  };
+
+  async function toast(message: string) {
+    if (!effectsWanted()) return;
+    const fx = await loadSakuga(['toast.js']);
+    if (!fx) return;
+    let el = document.querySelector<HTMLElement & { show(m: string): void }>('sakuga-toast');
+    if (!el) {
+      el = document.createElement('sakuga-toast') as HTMLElement & { show(m: string): void };
+      el.style.cssText = 'position: fixed; left: 24px; bottom: 24px; z-index: 50';
+      document.body.append(el);
+    }
+    el.show(message);
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+    errorBox.hidden = true;
+    setBusy(true);
+    const data = new FormData(form);
+    const name = String(data.get('name') ?? '');
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: form.dataset.accessKey,
+          from_name: name,
+          subject: String(data.get('subject') ?? '') || `New Portfolio Message from ${name}`,
+          email: data.get('email'),
+          message: data.get('message'),
+          botcheck: data.get('botcheck') ? true : '',
+        }),
+      });
+      const result = await res.json();
+      if (result.success) {
+        form.reset();
+        form.hidden = true;
+        success.hidden = false;
+        toast('Message sent!');
+      } else {
+        showError(result.message || 'Something went wrong. Please try emailing me directly.');
+      }
+    } catch {
+      showError('Network error. Check your connection or email me directly.');
+    } finally {
+      setBusy(false);
+    }
+  });
+
+  document.getElementById('contact-reset')!.addEventListener('click', () => {
+    success.hidden = true;
+    form.hidden = false;
+    form.querySelector<HTMLInputElement>('input[name="name"]')?.focus();
+  });
+
+  // Finale: tilt forward when it scrolls into view; hovering replays it.
+  const finale = document.querySelector<HTMLElement>('.finale');
+  if (finale) {
+    const tilt = () => {
+      finale.classList.remove('is-tilting');
+      void finale.offsetWidth; // restart the animation
+      finale.classList.add('is-tilting');
+    };
+    new IntersectionObserver(
+      (entries, io) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          tilt();
+          io.disconnect();
+        }
+      },
+      { threshold: 0.35 },
+    ).observe(finale);
+    finale.addEventListener('mouseenter', tilt);
+  }
+
+  // Copy button: shown only when the Clipboard API exists.
+  const copyBtn = document.getElementById('copy-email') as HTMLButtonElement;
+  const copyLabel = copyBtn.querySelector('[data-copy-label]')!;
+  if (navigator.clipboard) {
+    copyBtn.hidden = false;
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(copyBtn.dataset.email!);
+        copyLabel.textContent = 'Copied';
+        sakugaDone(copyBtn);
+      } catch {
+        copyLabel.textContent = 'Selected: copy it';
+        const range = document.createRange();
+        range.selectNodeContents(document.getElementById('contact-email')!);
+        getSelection()?.removeAllRanges();
+        getSelection()?.addRange(range);
+      }
+      setTimeout(() => (copyLabel.textContent = 'Copy'), 2000);
+    });
+  }
+</script>

@@ -1,0 +1,15 @@
+---
+const year = new Date().getFullYear();
+const updated = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+---
+
+<footer class="site-footer">
+  <div class="wrap flex flex-col gap-3 py-8 text-sm sm:flex-row sm:items-center sm:justify-between">
+    <p>© {year} Mubashir Fayyaz · Built with <a class="ink-link" href="https://astro.build" target="_blank" rel="noopener noreferrer">Astro</a></p>
+    <p class="text-ink-soft">
+      UI effects: <a class="ink-link" href="https://github.com/finktheartist/sakuga-vfx" target="_blank" rel="noopener noreferrer">sakuga-vfx</a>{' '}
+      by finktheartist (MIT) · Fonts: Anton, Inter (OFL) · Last updated{' '}
+      <time datetime={new Date().toISOString().slice(0, 10)}>{updated}</time>
+    </p>
+  </div>
+</footer>

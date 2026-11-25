@@ -1,0 +1,52 @@
+---
+/**
+ * A demo video that loads only when clicked (YouTube or Loom). Without JS, it's a link to the video.
+ * With no URL yet, a marked placeholder.
+ */
+interface Props {
+  url?: string;
+  title: string;
+}
+
+const { url, title } = Astro.props;
+
+function embedUrl(u: string): string | undefined {
+  const yt = u.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/);
+  if (yt) return `https://www.youtube-nocookie.com/embed/${yt[1]}?autoplay=1`;
+  const loom = u.match(/loom\.com\/(?:share|embed)\/([\w]+)/);
+  if (loom) return `https://www.loom.com/embed/${loom[1]}?autoplay=1`;
+  return undefined;
+}
+const embed = url ? embedUrl(url) : undefined;
+const host = url?.includes('loom.com') ? 'Loom' : 'YouTube';
+---
+
+{
+  url ? (
+    <div class="frame video-frame" style="aspect-ratio: 16 / 9">
+      <a href={url} class="video-facade h-full" data-sakuga="impact" data-embed={embed} data-title={`${title} demo`} target="_blank" rel="noopener noreferrer">
+        <span class="video-facade__play" aria-hidden="true">▶</span>
+        <span class="font-bold">Play demo</span>
+        <span class="text-xs opacity-80">Loads from {host}</span>
+      </a>
+    </div>
+  ) : (
+    <div class="frame slot halftone" style="aspect-ratio: 3 / 1" role="img" aria-label={`${title} demo video coming soon`}>
+      <span class="slot__label">TODO: Mubashir to add demo video</span>
+    </div>
+  )
+}
+
+<script>
+  document.querySelectorAll<HTMLAnchorElement>('.video-facade[data-embed]').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const iframe = document.createElement('iframe');
+      iframe.src = a.dataset.embed!;
+      iframe.title = a.dataset.title ?? 'Demo video';
+      iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      iframe.allowFullscreen = true;
+      a.replaceWith(iframe);
+    });
+  });
+</script>

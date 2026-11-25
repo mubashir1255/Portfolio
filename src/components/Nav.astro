@@ -1,0 +1,26 @@
+---
+import { navLinks } from '@/data/site';
+---
+
+<header class="site-nav">
+  <nav class="site-nav__inner" aria-label="Main">
+    <a href="#main" class="nav-brand">
+      <span class="nav-brand__mark" aria-hidden="true">MF</span>
+      <span class="hidden sm:inline">Mubashir Fayyaz</span>
+      <span class="sr-only sm:hidden">Mubashir Fayyaz</span>
+    </a>
+    <ul class="nav-links">
+      {navLinks.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+    </ul>
+    <!-- Hidden until JS runs: without JS, Play mode has nothing to switch. -->
+    <button type="button" id="play-toggle" class="play-switch" role="switch" aria-checked="false" hidden>
+      <span class="play-switch__track" aria-hidden="true"></span>
+      Play mode
+    </button>
+  </nav>
+</header>
+
+<script>
+  import { initPlay } from '@/scripts/play';
+  initPlay();
+</script>

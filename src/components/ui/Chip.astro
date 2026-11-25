@@ -1,0 +1,60 @@
+---
+/**
+ * A skill chip. With `tip`, it becomes focusable and shows a speech-bubble tooltip
+ * on hover and focus; Escape hides it (WCAG 1.4.13).
+ */
+interface Props {
+  label: string;
+  tip?: string;
+  /** unique id for the tooltip; defaults to one built from the label */
+  id?: string;
+}
+
+const { label, tip, id } = Astro.props;
+const tipId = id ?? `tip-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
+---
+
+{
+  tip ? (
+    <span class="tip">
+      <button type="button" class="chip chip--tip" aria-describedby={tipId}>
+        {label}
+      </button>
+      <span role="tooltip" id={tipId} class="tip__bubble bubble bubble--tail-down">
+        {tip}
+      </span>
+    </span>
+  ) : (
+    <span class="chip">{label}</span>
+  )
+}
+
+<script>
+  // Escape closes an open tooltip; it can open again once the pointer/focus leaves and returns.
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    document.querySelectorAll('.tip:hover, .tip:focus-within').forEach((t) => t.classList.add('tip--closed'));
+  });
+  const reopen = (e: Event) => (e.currentTarget as Element).classList.remove('tip--closed');
+  // Keep the bubble inside the viewport (chips near the edge on phones).
+  const MARGIN = 8;
+  const place = (e: Event) => {
+    const tip = e.currentTarget as HTMLElement;
+    const bubble = tip.querySelector<HTMLElement>('.tip__bubble');
+    if (!bubble) return;
+    const r = tip.getBoundingClientRect();
+    const center = r.left + r.width / 2;
+    const half = bubble.offsetWidth / 2;
+    const vw = document.documentElement.clientWidth;
+    let shift = 0;
+    if (center - half < MARGIN) shift = MARGIN - (center - half);
+    else if (center + half > vw - MARGIN) shift = vw - MARGIN - (center + half);
+    bubble.style.setProperty('--tip-shift', `${shift}px`);
+  };
+  document.querySelectorAll('.tip').forEach((t) => {
+    t.addEventListener('mouseenter', place);
+    t.addEventListener('focusin', place);
+    t.addEventListener('mouseleave', reopen);
+    t.addEventListener('focusout', reopen);
+  });
+</script>

@@ -1,0 +1,24 @@
+---
+/** Speech bubble, shout (spiky, one word) or narration caption. Always real text. */
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'p'> {
+  variant?: 'speech' | 'shout' | 'caption';
+  tail?: 'left' | 'right' | 'down' | 'none';
+  as?: 'p' | 'div' | 'span';
+}
+
+const { variant = 'speech', tail = 'left', as: Tag = 'p', class: cls, ...rest } = Astro.props;
+---
+
+<Tag
+  class:list={[
+    variant === 'caption' ? 'caption-box' : 'bubble',
+    variant === 'shout' && 'bubble--shout',
+    variant === 'speech' && tail !== 'none' && `bubble--tail-${tail}`,
+    cls,
+  ]}
+  {...rest}
+>
+  <slot />
+</Tag>

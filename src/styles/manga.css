@@ -1,0 +1,1253 @@
+@import "tailwindcss";
+
+/*
+ * Manga Volume design system.
+ * Rule: the page stays quiet. Things only "go boom" when the visitor does something.
+ * Every colour, font and size lives in the tokens below; components only reference tokens.
+ */
+
+@theme {
+  /* Paper & ink */
+  --color-paper: #f6f4ee;
+  --color-paper-deep: #ebe7dc;
+  --color-sheet: #fffdf8;
+  --color-ink: #14120f;
+  --color-ink-soft: #4a453d;
+  --color-ink-faint: #8a8478;
+  /* The one accent: electric blue, and what's derived from it.
+     accent       5.0:1 on paper, 5.5:1 under white text: text, fills, focus rings, chapter numbers
+     accent-deep  hover and pressed states (7.5:1 on paper)
+     accent-tint  halftone dots and highlights (never text)
+     accent-night on ink/dark surfaces and for night mode (5.7:1 on ink) */
+  --color-accent: #0057ff;
+  --color-accent-deep: #0041c2;
+  --color-accent-tint: #d6e4ff;
+  --color-accent-night: #4d8bff;
+
+  --font-display: "Anton", "Impact", "Arial Narrow", sans-serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  --line: 3px;            /* panel border */
+  --line-thin: 2px;       /* chips, inputs */
+  --shadow-offset: 6px;   /* hard comic shadow, no blur */
+  --radius: 4px;
+
+  /* Halftone dots */
+  --dot-color: rgb(0 87 255 / 0.16);
+  --dot-size: 1.1px;
+  --dot-gap: 9px;
+
+  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Play mode (opt-in, set on <html> by the nav switch): louder halftone, bigger tilts. */
+:root[data-play="on"] {
+  --dot-color: rgb(0 87 255 / 0.3);
+  --dot-size: 1.6px;
+  --dot-gap: 7px;
+}
+
+/* ── Base ─────────────────────────────────────────────── */
+html {
+  color-scheme: light;
+  background: var(--color-paper);
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem; /* clears the sticky nav for anchor jumps */
+}
+body {
+  /* paper comes from <html> (the canvas), so the fixed background globe can sit behind the page */
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+}
+a {
+  text-underline-offset: 0.18em;
+}
+
+/* ── Typography ───────────────────────────────────────── */
+@layer components {
+  .display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    line-height: 0.95;
+  }
+  .kicker {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+  .prose-ink {
+    color: var(--color-ink-soft);
+    max-width: 62ch;
+  }
+  .ink-link {
+    color: var(--color-ink);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent);
+    text-decoration-thickness: 2px;
+  }
+  .ink-link:hover {
+    color: var(--color-accent-deep);
+  }
+}
+
+/* ── Halftone ─────────────────────────────────────────── */
+@layer components {
+  .halftone {
+    background-image: radial-gradient(
+      circle,
+      var(--dot-color) var(--dot-size),
+      transparent calc(var(--dot-size) + 0.6px)
+    );
+    background-size: var(--dot-gap) var(--dot-gap);
+    transition: background-size 0.35s ease;
+  }
+  /* Dots fade out towards one corner, like screentone cut with a knife. */
+  .halftone--fade {
+    mask-image: linear-gradient(135deg, #000 10%, transparent 75%);
+  }
+  /* Denser on hover: used on image frames. */
+  .halftone--hover:hover,
+  .halftone--hover:focus-within {
+    --dot-gap: 6px;
+    --dot-size: 1.4px;
+  }
+}
+
+/* ── Panels ───────────────────────────────────────────── */
+@layer components {
+  .panel {
+    position: relative;
+    background-color: var(--color-sheet);
+    border: var(--line) solid var(--color-ink);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--color-ink);
+    padding: 1.5rem;
+    transition:
+      transform 0.25s var(--ease-pop),
+      box-shadow 0.25s var(--ease-pop);
+  }
+  .panel--ink {
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+    --color-accent: var(--color-accent-night); /* blue text on ink needs the brighter shade */
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--color-accent);
+  }
+  .panel--accent-shadow {
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--color-accent);
+  }
+  /* Hand-made feel; never on text-heavy blocks. */
+  .panel--tilt-left {
+    transform: rotate(-0.7deg);
+  }
+  .panel--tilt-right {
+    transform: rotate(0.8deg);
+  }
+  /* Interactive panels lift towards the reader. */
+  .panel--lift:hover,
+  .panel--lift:focus-within {
+    transform: translate(-3px, -3px);
+    box-shadow: calc(var(--shadow-offset) + 3px) calc(var(--shadow-offset) + 3px) 0 var(--color-ink);
+  }
+  :root[data-play="on"] .panel--lift:hover {
+    transform: translate(-4px, -4px) rotate(-1.5deg);
+  }
+  /* A halftone panel keeps a solid sheet colour under the dots. */
+  .panel.halftone {
+    background-color: var(--color-sheet);
+  }
+}
+
+/* ── Chapter header ───────────────────────────────────── */
+@layer components {
+  .chapter-head {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: end;
+    gap: 0.75rem 1.25rem;
+    position: relative;
+    padding-bottom: 0.75rem;
+  }
+  /* The rule under the heading: its own element so Play-mode motion can draw it in. */
+  .chapter-head__rule {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--line);
+    background: var(--color-ink);
+    transform-origin: left center;
+  }
+  .chapter-head__num {
+    font-family: var(--font-display);
+    font-size: clamp(3.5rem, 10vw, 6rem);
+    line-height: 0.8;
+    color: var(--color-accent);
+    -webkit-text-stroke: 2px var(--color-ink);
+  }
+  .chapter-head__title {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    line-height: 0.95;
+  }
+}
+
+/* ── Speech bubbles ───────────────────────────────────── */
+@layer components {
+  .bubble {
+    position: relative;
+    display: inline-block;
+    background: var(--color-sheet);
+    border: var(--line) solid var(--color-ink);
+    border-radius: 1.4rem;
+    padding: 0.85rem 1.15rem;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  /* Tail: an ink triangle with a paper triangle inside it. */
+  .bubble--tail-left::before,
+  .bubble--tail-left::after,
+  .bubble--tail-right::before,
+  .bubble--tail-right::after,
+  .bubble--tail-down::before,
+  .bubble--tail-down::after {
+    content: "";
+    position: absolute;
+    border-style: solid;
+    border-color: transparent;
+  }
+  .bubble--tail-left::before {
+    left: 1.4rem;
+    bottom: -18px;
+    border-width: 18px 18px 0 0;
+    border-top-color: var(--color-ink);
+  }
+  .bubble--tail-left::after {
+    left: calc(1.4rem + 3px);
+    bottom: -12px;
+    border-width: 12px 12px 0 0;
+    border-top-color: var(--color-sheet);
+  }
+  .bubble--tail-right::before {
+    right: 1.4rem;
+    bottom: -18px;
+    border-width: 18px 0 0 18px;
+    border-top-color: var(--color-ink);
+  }
+  .bubble--tail-right::after {
+    right: calc(1.4rem + 3px);
+    bottom: -12px;
+    border-width: 12px 0 0 12px;
+    border-top-color: var(--color-sheet);
+  }
+  .bubble--tail-down::before {
+    left: 50%;
+    bottom: -14px;
+    translate: -50% 0;
+    border-width: 14px 10px 0;
+    border-top-color: var(--color-ink);
+  }
+  .bubble--tail-down::after {
+    left: 50%;
+    bottom: -9px;
+    translate: -50% 0;
+    border-width: 9px 6px 0;
+    border-top-color: var(--color-sheet);
+  }
+  /* Shout: spiky outline, for one-word exclamations only. */
+  .bubble--shout {
+    border: none;
+    border-radius: 0;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 1.5rem 2.2rem;
+    clip-path: polygon(
+      0% 18%, 12% 22%, 8% 0%, 26% 14%, 36% 2%, 46% 16%, 60% 0%, 66% 15%, 84% 4%, 82% 22%,
+      100% 20%, 90% 40%, 100% 56%, 88% 64%, 98% 86%, 78% 80%, 72% 100%, 58% 84%, 46% 98%,
+      38% 82%, 20% 96%, 20% 78%, 0% 84%, 10% 62%, 0% 46%, 10% 36%
+    );
+  }
+  /* Narration caption: the rectangular box in a panel corner. */
+  .caption-box {
+    display: inline-block;
+    background: var(--color-paper-deep);
+    border: var(--line-thin) solid var(--color-ink);
+    padding: 0.4rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+}
+
+/* ── Buttons (native; sakuga-vfx upgrades some of these in Play mode) ── */
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.9rem;
+    padding: 0.6rem 1.3rem;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+    line-height: 1;
+    border: var(--line) solid var(--color-ink);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition:
+      transform 0.15s var(--ease-pop),
+      box-shadow 0.15s var(--ease-pop),
+      background-color 0.15s ease;
+  }
+  .btn:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 transparent;
+  }
+  .btn--primary {
+    background: var(--color-accent);
+    color: #fff;
+    box-shadow: 4px 4px 0 var(--color-ink);
+  }
+  .btn--primary:hover,
+  .btn--primary:active {
+    background: var(--color-accent-deep);
+  }
+  .btn--secondary {
+    background: var(--color-sheet);
+    color: var(--color-ink);
+    box-shadow: 4px 4px 0 var(--color-ink);
+  }
+  .btn--secondary:hover {
+    background: var(--color-accent-tint);
+  }
+  .btn--small {
+    min-height: 2.3rem;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.9rem;
+    border-width: var(--line-thin);
+    box-shadow: 3px 3px 0 var(--color-ink);
+  }
+}
+
+/* ── Chips, tags, badges ──────────────────────────────── */
+@layer components {
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    background: var(--color-sheet);
+    color: var(--color-ink);
+    border: var(--line-thin) solid var(--color-ink);
+    border-radius: 999px;
+  }
+  .chip--tip {
+    cursor: help;
+  }
+  .chip--tip:hover,
+  .chip--tip:focus-visible {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+  .tag {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border: 1.5px solid var(--color-ink);
+    border-radius: 2px;
+    color: var(--color-ink);
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    border-radius: 2px;
+  }
+  .badge--accent {
+    background: var(--color-accent);
+    color: #fff;
+  }
+}
+
+/* ── Tooltip: a speech bubble above a chip, on hover and focus ── */
+@layer components {
+  .tip {
+    position: relative;
+    display: inline-flex;
+  }
+  .tip__bubble {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 16px);
+    z-index: 20;
+    width: max-content;
+    max-width: min(16rem, 80vw);
+    padding: 0.55rem 0.8rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.35;
+    text-align: center;
+    border-radius: 1rem;
+    pointer-events: none;
+    opacity: 0;
+    translate: calc(-50% + var(--tip-shift, 0px)) 6px;
+    scale: 0.85;
+    transform-origin: 50% 100%;
+    transition:
+      opacity 0.15s ease,
+      translate 0.2s var(--ease-pop),
+      scale 0.2s var(--ease-pop);
+  }
+  .tip:hover .tip__bubble,
+  .tip:focus-within .tip__bubble {
+    opacity: 1;
+    translate: calc(-50% + var(--tip-shift, 0px)) 0;
+    scale: 1;
+  }
+  /* When the bubble is nudged on screen, its tail keeps pointing at the chip. */
+  .tip__bubble.bubble--tail-down::before,
+  .tip__bubble.bubble--tail-down::after {
+    left: calc(50% - var(--tip-shift, 0px));
+  }
+  /* Escape dismisses the bubble until the pointer or focus leaves (WCAG 1.4.13). */
+  .tip.tip--closed .tip__bubble {
+    opacity: 0;
+  }
+}
+
+/* ── Stats ────────────────────────────────────────────── */
+@layer components {
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    color: inherit;
+    text-decoration: none;
+  }
+  .stat__value {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 6vw, 3rem);
+    line-height: 1;
+  }
+  .stat__label {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+  }
+  a.stat:hover .stat__value {
+    color: var(--color-accent-deep);
+  }
+}
+
+/* ── Image frames & placeholders ──────────────────────── */
+@layer components {
+  .frame {
+    position: relative;
+    overflow: hidden;
+    border: var(--line) solid var(--color-ink);
+    border-radius: var(--radius);
+    background-color: var(--color-paper-deep);
+  }
+  .frame > img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  /* Dots over the screenshot, denser on hover. */
+  .frame.halftone--hover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(
+      circle,
+      rgb(0 87 255 / 0.28) var(--dot-size),
+      transparent calc(var(--dot-size) + 0.6px)
+    );
+    background-size: var(--dot-gap) var(--dot-gap);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .frame.halftone--hover:hover::after {
+    opacity: 1;
+  }
+  .slot {
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 1rem;
+    border-style: dashed;
+  }
+  .slot__label {
+    background: var(--color-sheet);
+    border: var(--line-thin) solid var(--color-ink);
+    padding: 0.35rem 0.7rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+  }
+}
+
+/* ── Hero effects: speed lines & glitch (hero name only) ── */
+@layer components {
+  /* A big square centred on its parent, faded to a circle, so it can spin without showing corners. */
+  .speed-lines {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(150%, 900px);
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    pointer-events: none;
+    background: repeating-conic-gradient(
+      from 0deg at 50% 50%,
+      var(--color-ink) 0deg 0.9deg,
+      transparent 0.9deg 5deg
+    );
+    mask-image: radial-gradient(circle closest-side, transparent 24%, #000 46%, #000 82%, transparent 100%);
+    opacity: 0.08;
+  }
+
+  .glitch {
+    position: relative;
+    display: inline-block;
+  }
+  .glitch__layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+  }
+  /* Once on load; in Play mode it then repeats every 1.5s (no hover needed). */
+  .glitch__layer--a {
+    color: var(--color-accent);
+    animation: glitch-a 0.65s steps(1, end) 0.4s 1 forwards;
+  }
+  .glitch__layer--b {
+    color: var(--color-accent-night);
+    animation: glitch-b 0.65s steps(1, end) 0.4s 1 forwards;
+  }
+  :root[data-play="on"] .glitch__layer--a {
+    animation: glitch-a-loop 1.5s steps(1, end) 0.4s infinite;
+  }
+  :root[data-play="on"] .glitch__layer--b {
+    animation: glitch-b-loop 1.5s steps(1, end) 0.4s infinite;
+  }
+}
+
+@keyframes glitch-a {
+  0% { opacity: 1; clip-path: inset(10% 0 70% 0); translate: -4px 0; }
+  20% { clip-path: inset(55% 0 20% 0); translate: 4px 0; }
+  40% { clip-path: inset(30% 0 50% 0); translate: -3px 0; }
+  60% { clip-path: inset(75% 0 5% 0); translate: 3px 0; }
+  80% { clip-path: inset(0 0 85% 0); translate: -2px 0; }
+  100% { opacity: 0; clip-path: inset(0 0 100% 0); translate: 0 0; }
+}
+@keyframes glitch-b {
+  0% { opacity: 1; clip-path: inset(65% 0 10% 0); translate: 3px 0; }
+  20% { clip-path: inset(5% 0 75% 0); translate: -4px 0; }
+  40% { clip-path: inset(45% 0 35% 0); translate: 2px 0; }
+  60% { clip-path: inset(20% 0 60% 0); translate: -3px 0; }
+  80% { clip-path: inset(85% 0 0 0); translate: 2px 0; }
+  100% { opacity: 0; clip-path: inset(0 0 100% 0); translate: 0 0; }
+}
+/* 1.5s cycle: three slices held ~140ms each (~0.42s), then the name rests clean */
+@keyframes glitch-a-loop {
+  0% { opacity: 1; clip-path: inset(10% 0 70% 0); translate: -3px 0; }
+  9.3% { clip-path: inset(55% 0 20% 0); translate: 3px 0; }
+  18.6% { clip-path: inset(0 0 85% 0); translate: -2px 0; }
+  28%, 100% { opacity: 0; clip-path: inset(0 0 100% 0); translate: 0 0; }
+}
+@keyframes glitch-b-loop {
+  0% { opacity: 1; clip-path: inset(65% 0 10% 0); translate: 2px 0; }
+  9.3% { clip-path: inset(5% 0 75% 0); translate: -3px 0; }
+  18.6% { clip-path: inset(85% 0 0 0); translate: 2px 0; }
+  28%, 100% { opacity: 0; clip-path: inset(0 0 100% 0); translate: 0 0; }
+}
+
+/* ── Reduced motion: no glitch, no pops, no halftone animation ── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .glitch__layer {
+    display: none;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  .panel--lift:hover,
+  :root[data-play="on"] .panel--lift:hover {
+    transform: none;
+  }
+}
+
+/* ── sakuga-vfx theme (only matters in Play mode, when the controls load) ── */
+:root {
+  --sk-card: var(--color-sheet);
+  --sk-ink: var(--color-ink);
+  --sk-dim: var(--color-ink-soft);
+  --sk-soft: var(--color-accent-tint);
+  --sk-pri: var(--color-accent);
+  --sk-pri-ink: #fff;
+  --sk-on-pri: #fff;
+  --sk-acc: var(--color-accent);
+  --sk-track: var(--color-paper-deep);
+  --sk-r: var(--radius);
+  --sk-bw: var(--line);
+  --sk-sh: 4px 4px 0 var(--color-ink);
+}
+sakuga-tabs {
+  font: 600 15px/1.4 var(--font-sans);
+}
+
+/* ── Play-mode effects on native buttons ── */
+@layer components {
+  /* The springs drive transform in Play mode; CSS must not fight them. */
+  :root[data-play="on"] .btn[data-sakuga] {
+    transition: background-color 0.15s ease;
+  }
+  :root[data-play="on"] .btn[data-sakuga]:active {
+    transform: none;
+  }
+  .btn.is-impact {
+    background: var(--color-ink) !important;
+    color: var(--color-sheet) !important;
+    box-shadow: none !important;
+  }
+  .btn.is-done::after {
+    content: "✓";
+    margin-left: 0.35rem;
+    color: var(--color-accent);
+  }
+}
+
+/* ── Nav ── */
+@layer components {
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: var(--color-paper);
+    border-bottom: var(--line) solid var(--color-ink);
+  }
+  .site-nav__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.25rem;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding: 0.6rem 1.25rem;
+  }
+  .nav-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--color-ink);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.875rem;
+  }
+  .nav-brand__mark {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    border-radius: 2px;
+    box-shadow: 3px 3px 0 var(--color-accent);
+  }
+  .nav-links {
+    order: 3;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.15rem 0.8rem;
+    width: 100%;
+    font-size: 0.8125rem;
+    font-weight: 700;
+  }
+  .nav-links a {
+    color: var(--color-ink);
+    text-decoration: none;
+    padding-block: 0.3rem;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+  }
+  @media (min-width: 640px) {
+    .nav-links {
+      gap: 0.15rem 1.1rem;
+      font-size: 0.875rem;
+    }
+  }
+  .nav-links a:hover {
+    border-bottom-color: var(--color-accent);
+  }
+  @media (min-width: 1024px) {
+    .nav-links {
+      order: 0;
+      width: auto;
+      margin-left: auto;
+    }
+  }
+  /* Play mode switch: a native role="switch" button. */
+  .play-switch {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: none;
+    border: 0;
+    color: var(--color-ink);
+    cursor: pointer;
+    padding: 0.25rem;
+  }
+  @media (min-width: 1024px) {
+    .play-switch {
+      margin-left: 0;
+    }
+  }
+  .play-switch__track {
+    position: relative;
+    width: 2.75rem;
+    height: 1.5rem;
+    border: var(--line-thin) solid var(--color-ink);
+    border-radius: 999px;
+    background: var(--color-sheet);
+    transition: background-color 0.2s ease;
+  }
+  .play-switch__track::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background: var(--color-ink);
+    transition: translate 0.25s var(--ease-pop);
+  }
+  .play-switch[aria-checked="true"] .play-switch__track {
+    background: var(--color-accent);
+  }
+  .play-switch[aria-checked="true"] .play-switch__track::after {
+    translate: 1.25rem 0;
+    background: var(--color-sheet);
+  }
+}
+
+/* ── Page frame ── */
+@layer components {
+  .wrap {
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  .chapter {
+    padding-block: 4.5rem;
+  }
+}
+
+/* ── Hero ── */
+@layer components {
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding-block: 2.5rem 3rem;
+  }
+  .hero__dots {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .hero__name {
+    font-size: clamp(3.25rem, 11vw, 7.5rem);
+  }
+  .now-list li {
+    display: grid;
+    grid-template-columns: 1.25rem 1fr;
+    gap: 0.4rem;
+  }
+  .now-list li::before {
+    content: "▸";
+    color: var(--color-accent-night);
+  }
+}
+
+/* ── Projects ── */
+@layer components {
+  .filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .filter__btn {
+    padding: 0.4rem 1rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    background: var(--color-sheet);
+    color: var(--color-ink);
+    border: var(--line-thin) solid var(--color-ink);
+    border-radius: var(--radius);
+    cursor: pointer;
+    box-shadow: 3px 3px 0 var(--color-ink);
+  }
+  .filter__btn[aria-pressed="true"] {
+    background: var(--color-ink);
+    color: var(--color-paper);
+    box-shadow: 3px 3px 0 var(--color-accent);
+  }
+  /* Problem → Build → Result: three small panels in a row */
+  .case-strip {
+    display: grid;
+    gap: 1.25rem;
+    counter-reset: beat;
+  }
+  @media (min-width: 768px) {
+    .case-strip {
+      grid-template-columns: repeat(var(--beats, 3), 1fr);
+    }
+    .case-strip > li:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      right: -1.15rem;
+      top: 50%;
+      translate: 0 -50%;
+      z-index: 1;
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      color: var(--color-accent);
+    }
+  }
+  .case-strip > li {
+    position: relative;
+    padding: 1rem;
+    box-shadow: 4px 4px 0 var(--color-ink);
+  }
+  .case-strip__label {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: 1.15rem;
+    letter-spacing: 0.03em;
+  }
+  .case-strip__label span {
+    color: var(--color-accent);
+    margin-right: 0.35rem;
+  }
+  .video-facade {
+    display: grid;
+    place-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--color-paper);
+    background: var(--color-ink);
+  }
+  .video-facade__play {
+    display: grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: var(--color-accent);
+    color: #fff;
+    font-size: 1.25rem;
+  }
+  .video-frame iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+}
+
+/* ── Form fields (native) ── */
+@layer components {
+  .field-label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .field-label span {
+    color: var(--color-accent);
+  }
+  .field {
+    width: 100%;
+    padding: 0.65rem 0.8rem;
+    font: inherit;
+    color: var(--color-ink);
+    background: var(--color-sheet);
+    border: var(--line-thin) solid var(--color-ink);
+    border-radius: var(--radius);
+    box-shadow: 3px 3px 0 var(--color-ink);
+    transition: box-shadow 0.15s ease;
+  }
+  .field::placeholder {
+    color: var(--color-ink-faint);
+  }
+  .field:focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+    box-shadow: 3px 3px 0 var(--color-accent);
+  }
+  .field:user-invalid {
+    border-color: var(--color-accent-deep);
+    border-style: dashed;
+  }
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: progress;
+  }
+}
+
+/* ── Journey timeline ── */
+@layer components {
+  .timeline {
+    position: relative;
+    display: grid;
+    gap: 1.75rem;
+    padding-left: 2.25rem;
+  }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 0.55rem;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    border-left: var(--line) dashed var(--color-ink);
+  }
+  .timeline__item {
+    position: relative;
+  }
+  .timeline__dot {
+    position: absolute;
+    left: -2.2rem;
+    top: 1.4rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    background: var(--color-accent);
+    border: var(--line) solid var(--color-ink);
+    border-radius: 50%;
+  }
+}
+
+/* ── Finale: "Further info will be revealed soon" ── */
+@layer components {
+  .finale {
+    overflow: hidden;
+    container-type: inline-size; /* the text is sized from this panel's width */
+    padding: clamp(1.75rem, 5vw, 3.5rem) !important;
+  }
+  .finale__lines {
+    background: repeating-conic-gradient(from 0deg at 50% 50%, #f6f4ee 0deg 0.9deg, transparent 0.9deg 5deg);
+    opacity: 0.1;
+  }
+  /* Fills the panel edge to edge: the phrase is 14.37em wide in Anton (one line),
+     each half about 7.1em (two lines on narrow panels). Re-measure if the words change. */
+  .finale__text {
+    margin: 0;
+    font-size: 6.85cqi;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  @container (max-width: 640px) {
+    .finale__text {
+      font-size: 13.9cqi;
+    }
+    .finale__line {
+      display: block;
+    }
+  }
+}
+
+/* ── Footer ── */
+@layer components {
+  .site-footer {
+    border-top: var(--line) solid var(--color-ink);
+    background: var(--color-paper-deep);
+  }
+}
+
+/* ── Avatar: black & white to match the ink palette (remove the filter for colour) ── */
+@layer components {
+  .avatar-ink img {
+    filter: grayscale(1) contrast(1.15);
+  }
+}
+
+/* ── Finale tilt-forward: plays when the panel scrolls into view, replays on hover ── */
+@layer components {
+  .finale {
+    perspective: 900px;
+  }
+  .finale__text {
+    transform-origin: 50% 100%;
+  }
+  .finale.is-tilting .finale__text {
+    animation: tilt-forward 0.95s cubic-bezier(0.25, 0.9, 0.3, 1) both;
+  }
+}
+@keyframes tilt-forward {
+  0% { transform: rotateX(72deg); opacity: 0; }
+  45% { transform: rotateX(-14deg); opacity: 1; }   /* swings past upright, toward the reader */
+  70% { transform: rotateX(6deg); }
+  88% { transform: rotateX(-2deg); }
+  100% { transform: rotateX(0deg); }
+}
+
+/* ═════════════ Alive: entrance on load, ambient motion, hover feedback ═════════════
+   Entrance and ambient motion run only in Play mode (set on <html> before first paint).
+   Big elements (name, avatar) move but never fade, so the largest paint isn't delayed.
+   The reduced-motion rule at the top of this file stops all of it. */
+
+/* Hero entrance */
+:root[data-play="on"] .hero__name {
+  animation: name-land 0.7s cubic-bezier(0.2, 1.3, 0.4, 1) both;
+}
+:root[data-play="on"] .hero .wrap > div:first-child > :not(h1) {
+  animation: rise-in 0.6s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+:root[data-play="on"] .hero .wrap > div:first-child > :nth-child(2) { animation-delay: 0.15s; }
+:root[data-play="on"] .hero .wrap > div:first-child > :nth-child(3) { animation-delay: 0.25s; }
+:root[data-play="on"] .hero .wrap > div:first-child > :nth-child(4) { animation-delay: 0.35s; }
+:root[data-play="on"] .hero .wrap > div:first-child > :nth-child(5) { animation-delay: 0.45s; }
+:root[data-play="on"] .hero figure.panel {
+  animation:
+    avatar-drop 0.8s cubic-bezier(0.2, 1.4, 0.4, 1) 0.1s both,
+    avatar-float 6s ease-in-out 1.2s infinite;
+}
+:root[data-play="on"] .hero aside.panel--ink {
+  animation: slide-in-right 0.7s cubic-bezier(0.2, 1, 0.3, 1) 0.3s both;
+}
+:root[data-play="on"] .hero .wrap:last-child > * {
+  animation: rise-in 0.6s cubic-bezier(0.2, 0.9, 0.3, 1) 0.5s both;
+}
+:root[data-play="on"] .hero .wrap:last-child > :last-child { animation-delay: 0.62s; }
+
+@keyframes name-land {
+  from { transform: translateY(-18px) scale(1.06); }
+  to { transform: none; }
+}
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: none; }
+}
+/* the avatar keeps its 0.8deg tilt throughout */
+@keyframes avatar-drop {
+  from { transform: translateY(-36px) rotate(-6deg); }
+  to { transform: rotate(0.8deg); }
+}
+@keyframes avatar-float {
+  0%, 100% { transform: rotate(0.8deg) translateY(0); }
+  50% { transform: rotate(-0.4deg) translateY(-6px); }
+}
+
+/* Ambient: speed lines turn very slowly; a live dot pulses next to "Now" */
+:root[data-play="on"] .speed-lines {
+  animation: spin-slow 90s linear infinite;
+}
+@keyframes spin-slow {
+  to { rotate: 360deg; }
+}
+.hero aside.panel--ink .kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.hero aside.panel--ink .kicker::before {
+  content: "";
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+:root[data-play="on"] .hero aside.panel--ink .kicker::before {
+  animation: live-pulse 1.8s ease-out infinite;
+}
+@keyframes live-pulse {
+  0% { box-shadow: 0 0 0 0 rgb(77 139 255 / 0.7); }
+  70% { box-shadow: 0 0 0 0.55rem rgb(77 139 255 / 0); }
+  100% { box-shadow: 0 0 0 0 rgb(77 139 255 / 0); }
+}
+
+/* Hover feedback (both modes: these answer the visitor) */
+@layer components {
+  .btn:hover {
+    transform: translate(-2px, -2px);
+  }
+  .btn--primary:hover {
+    box-shadow: 6px 6px 0 var(--color-ink);
+  }
+  .btn--secondary:hover {
+    box-shadow: 6px 6px 0 var(--color-ink);
+  }
+  /* pressing wins over the hover lift */
+  .btn:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 transparent;
+  }
+  .frame > img {
+    transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+  .frame:hover > img,
+  .project:hover .frame > img {
+    transform: scale(1.04);
+  }
+  .nav-links a {
+    position: relative;
+    border-bottom: 0;
+  }
+  .nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+  .nav-links a:hover::after,
+  .nav-links a:focus-visible::after {
+    transform: scaleX(1);
+  }
+}
+
+/* ── Background globe: fixed, faint, behind everything; panels cover it ── */
+.bg-globe {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  pointer-events: none;
+}
+.bg-globe__stage {
+  position: relative;
+}
+.bg-globe__canvas {
+  display: block;
+  /* final size from the first paint, so drawing into it never shifts anything */
+  width: min(78vh, 94vw);
+  height: min(78vh, 94vw);
+}
+/* Lahore: a shining blue light, placed over its cell by the script */
+.bg-globe__light {
+  position: absolute;
+  width: calc(var(--cell, 6px) * 1.15);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: #3d8bff;
+  box-shadow:
+    0 0 3px 1px #7fb0ff,
+    0 0 10px 3px rgb(0 87 255 / 0.8),
+    0 0 22px 8px rgb(0 87 255 / 0.45);
+}
+:root[data-play="on"] .bg-globe__light {
+  animation: lahore-light 1.6s ease-in-out infinite;
+}
+@keyframes lahore-light {
+  0%, 100% { box-shadow: 0 0 3px 1px #7fb0ff, 0 0 10px 3px rgb(0 87 255 / 0.8), 0 0 22px 8px rgb(0 87 255 / 0.45); }
+  50% { box-shadow: 0 0 5px 2px #a9c9ff, 0 0 16px 6px rgb(0 87 255 / 0.95), 0 0 36px 14px rgb(0 87 255 / 0.55); }
+}
+.bg-globe__art {
+  margin: 0;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, "DejaVu Sans Mono", Consolas, monospace;
+  font-weight: 700;
+  line-height: 1;
+  white-space: pre;
+  user-select: none;
+  font-size: calc(min(78vh, 94vw) / (var(--cols) * 0.6));
+  color: rgb(20 18 15 / 0.34);
+}
+.bg-globe__art b {
+  font-weight: inherit;
+  color: rgb(0 87 255 / 0.62);
+}
+/* Pakistan: blue fill, solid blue border */
+.bg-globe__art em {
+  font-style: normal;
+  color: rgb(0 87 255 / 0.78);
+}
+.bg-globe__art u {
+  text-decoration: none;
+  color: var(--color-accent);
+}
+/* Lahore: a shining blue light */
+.bg-globe__art i {
+  font-style: normal;
+  color: #3d8bff;
+  text-shadow:
+    0 0 3px #7fb0ff,
+    0 0 8px #0057ff,
+    0 0 16px rgb(0 87 255 / 0.8),
+    0 0 28px rgb(0 87 255 / 0.5);
+}
+:root[data-play="on"] .bg-globe__art i {
+  animation: lahore-glow 1.6s ease-in-out infinite;
+}
+@keyframes lahore-glow {
+  0%, 100% { text-shadow: 0 0 3px #7fb0ff, 0 0 8px #0057ff, 0 0 16px rgb(0 87 255 / 0.8), 0 0 28px rgb(0 87 255 / 0.5); }
+  50% { text-shadow: 0 0 4px #a9c9ff, 0 0 12px #0057ff, 0 0 26px rgb(0 87 255 / 0.95), 0 0 44px rgb(0 87 255 / 0.65); }
+}
+
+/* The hero keeps calm halftone even in Play mode, so the globe behind it reads clearly. */
+.hero__dots {
+  --dot-color: rgb(0 87 255 / 0.12);
+  --dot-size: 1.1px;
+  --dot-gap: 9px;
+}

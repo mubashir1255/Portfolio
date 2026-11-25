@@ -1,0 +1,69 @@
+---
+/** Layout for the Manga Volume design. JSON-LD and the rest of the SEO pass land in Phase 5. */
+import '@fontsource/anton/400.css';
+import '@fontsource-variable/inter';
+import '@/styles/manga.css';
+import { withBase } from '@/lib';
+// Preloaded so the hero doesn't re-wrap when the fonts swap in (layout shift).
+import antonUrl from '@fontsource/anton/files/anton-latin-400-normal.woff2?url';
+import interUrl from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+
+interface Props {
+  title: string;
+  description: string;
+  /** keep the page out of search engines (styleguide) */
+  noindex?: boolean;
+}
+
+const { title, description, noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL(withBase('og.png'), Astro.site).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <link rel="preload" href={antonUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={interUrl} as="font" type="font/woff2" crossorigin />
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={withBase('favicon.ico')} sizes="32x32" />
+    <link rel="icon" href={withBase('favicon.svg')} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={withBase('apple-touch-icon.png')} />
+    <meta name="theme-color" content="#f6f4ee" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Mubashir Fayyaz — Full Stack Developer · Cloud · AI · Security" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <slot name="head" />
+    <!--
+      Analytics hook: a privacy-friendly snippet (e.g. Plausible, Umami, GoatCounter) goes here.
+      Not enabled. Ask before adding one.
+    -->
+    <!-- Play mode is on by default; a visitor who switches it off stays off. Set before first paint. -->
+    <script is:inline>
+      var play = 'on';
+      try {
+        play = localStorage.getItem('play-mode') || 'on';
+      } catch {}
+      if (play === 'on') document.documentElement.dataset.play = 'on';
+    </script>
+  </head>
+  <body>
+    <a href="#main" class="btn btn--primary sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50">Skip to content</a>
+    <slot />
+  </body>
+</html>

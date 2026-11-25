@@ -1,0 +1,81 @@
+---
+import Panel from '@/components/ui/Panel.astro';
+import Button from '@/components/ui/Button.astro';
+import Stat from '@/components/ui/Stat.astro';
+import ImageSlot from '@/components/ui/ImageSlot.astro';
+import GlitchName from '@/components/ui/GlitchName.astro';
+import { person, socials, resumePath } from '@/data/site';
+import { now } from '@/data/now';
+import { stats } from '@/data/stats';
+import { featuredProjects } from '@/data/projects';
+import { withBase } from '@/lib';
+import avatar from '@/assets/avatar.jpg';
+
+---
+
+<section class="hero" aria-labelledby="hero-name">
+  <div class="hero__dots halftone halftone--fade" aria-hidden="true"></div>
+
+  <div class="wrap relative grid gap-10 lg:grid-cols-[1.35fr_1fr] lg:items-start">
+    <div class="space-y-6">
+      <h1 id="hero-name" class="display hero__name relative">
+        <GlitchName text={person.name} class="relative" />
+      </h1>
+
+      <p class="text-lg font-bold sm:text-xl">{person.role}</p>
+      <p class="prose-ink text-lg">{person.pitch}</p>
+
+      <div class="flex flex-wrap gap-4">
+        <Button href="#projects" sakuga="impact">View projects</Button>
+        <Button href={withBase(resumePath)} variant="secondary" download sakuga="done">Download resume</Button>
+        <Button href="#contact" variant="secondary" sakuga="impact">Contact</Button>
+      </div>
+
+      <ul class="flex gap-5 text-sm" aria-label="Profiles">
+        {
+          socials.map((s) => (
+            <li>
+              <a class="ink-link" href={s.href} target="_blank" rel="noopener noreferrer">
+                {s.label}
+                <span class="sr-only">(opens in a new tab)</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="grid items-start gap-8 sm:grid-cols-[minmax(0,15rem)_1fr] lg:grid-cols-1 lg:justify-items-end">
+      <Panel as="figure" tilt="right" class="w-full max-w-[13rem] !p-3 sm:max-w-none lg:max-w-[17rem]">
+        <ImageSlot image={avatar} alt="Portrait of Mubashir Fayyaz" ratio="1 / 1" priority sizes="(min-width: 1024px) 272px, (min-width: 640px) 240px, 208px" class="avatar-ink" />
+      </Panel>
+      <Panel as="aside" tone="ink" aria-labelledby="now-title" class="w-full">
+        <h2 id="now-title" class="kicker">Now</h2>
+        <ul class="now-list mt-3 space-y-2 font-semibold">
+          {now.map((item) => <li>{item}</li>)}
+        </ul>
+      </Panel>
+    </div>
+  </div>
+
+  <div class="wrap relative mt-12 grid gap-8 md:grid-cols-[auto_1fr]">
+    <Panel class="flex flex-wrap gap-x-10 gap-y-4">
+      {stats.map((s) => <Stat {...s} />)}
+    </Panel>
+    <Panel as="aside" aria-labelledby="arcs-title" class="halftone">
+      <h2 id="arcs-title" class="kicker">Featured arcs</h2>
+      <ol class="mt-2 grid gap-2 sm:grid-cols-3">
+        {
+          featuredProjects.map((p, i) => (
+            <li>
+              <a href={`#project-${p.slug}`} class="ink-link block text-lg leading-tight" data-sakuga="impact" data-sakuga-word="pon">
+                <span class="text-accent">{String(i + 1).padStart(2, '0')}</span> {p.title}
+              </a>
+              <span class="text-sm text-ink-soft">{p.meta}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </Panel>
+  </div>
+</section>

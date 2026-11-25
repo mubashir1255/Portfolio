@@ -1,0 +1,27 @@
+---
+/** A smaller project card for the "more projects" grid. */
+import Panel from '@/components/ui/Panel.astro';
+import ImageSlot from '@/components/ui/ImageSlot.astro';
+import ProjectLinks from './ProjectLinks.astro';
+import type { Project } from '@/data/projects';
+
+interface Props {
+  project: Project;
+}
+
+const { project: p } = Astro.props;
+const headingId = `project-${p.slug}-title`;
+---
+
+<Panel as="article" id={`project-${p.slug}`} lift class="project flex flex-col gap-4 !p-4" data-categories={p.categories.join(' ')} aria-labelledby={headingId}>
+  {p.image && <ImageSlot image={p.image} alt={p.imageAlt} sizes="(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw" />}
+  <div class="flex flex-1 flex-col gap-3">
+    <p class="kicker">{p.meta}</p>
+    <h4 id={headingId} class="display text-2xl">{p.title}</h4>
+    <p class="text-[0.95rem] text-ink-soft">{p.summary}</p>
+    <ul class="flex flex-wrap gap-1.5" aria-label="Built with">
+      {p.tech.map((t) => <li class="tag">{t}</li>)}
+    </ul>
+    <div class="mt-auto pt-1"><ProjectLinks project={p} /></div>
+  </div>
+</Panel>
