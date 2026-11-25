@@ -2,6 +2,7 @@
 import ChapterHeader from '@/components/ui/ChapterHeader.astro';
 import Panel from '@/components/ui/Panel.astro';
 import { episodes } from '@/data/journey';
+import { stripTodo } from '@/lib';
 
 ---
 
@@ -18,7 +19,7 @@ import { episodes } from '@/data/journey';
               <span class="display text-3xl text-accent">{ep.when}</span>
               <span class="text-lg font-bold">{ep.title}</span>
             </h3>
-            <p class="prose-ink mt-2">{ep.text}</p>
+            <p class="prose-ink mt-2">{stripTodo(ep.text)}</p>
           </Panel>
         </li>
       ))

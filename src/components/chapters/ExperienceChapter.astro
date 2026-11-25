@@ -2,30 +2,42 @@
 import ChapterHeader from '@/components/ui/ChapterHeader.astro';
 import Panel from '@/components/ui/Panel.astro';
 import { experience } from '@/data/experience';
+import { isTodo } from '@/lib';
 ---
 
 <section id="experience" class="chapter wrap space-y-10" aria-labelledby="experience-title">
   <ChapterHeader num={1} title="Experience" headingId="experience-title" />
   <ol class="space-y-8">
     {
-      experience.map((job) => (
-        <li>
-          <Panel as="article" class="grid gap-6 md:grid-cols-[16rem_1fr]">
-            <div class="space-y-2 md:border-r-[3px] md:border-ink md:pr-6">
-              <span class="badge">{job.kind}</span>
-              <p class="font-semibold">{job.dates}</p>
-              <p class="text-sm text-ink-soft">{job.location}</p>
-            </div>
-            <div class="space-y-3">
-              <h3 class="display text-3xl sm:text-4xl">{job.role}</h3>
-              <p class="kicker">{job.org}</p>
-              <ul class="prose-ink list-disc space-y-1.5 pl-5">
-                {job.points.map((pt) => <li>{pt}</li>)}
-              </ul>
-            </div>
-          </Panel>
-        </li>
-      ))
+      experience.map((job) => {
+        const showDates = !isTodo(job.dates);
+        const showPlace = !isTodo(job.location);
+        const points = job.points.filter((pt) => !isTodo(pt));
+        const hasSide = showDates || showPlace;
+        return (
+          <li>
+            <Panel as="article" class:list={[hasSide && 'grid gap-6 md:grid-cols-[16rem_1fr]']}>
+              {hasSide && (
+                <div class="space-y-2 md:border-r-[3px] md:border-ink md:pr-6">
+                  <span class="badge">{job.kind}</span>
+                  {showDates && <p class="font-semibold">{job.dates}</p>}
+                  {showPlace && <p class="text-sm text-ink-soft">{job.location}</p>}
+                </div>
+              )}
+              <div class="space-y-3">
+                {!hasSide && <span class="badge">{job.kind}</span>}
+                <h3 class="display text-3xl sm:text-4xl">{job.role}</h3>
+                <p class="kicker">{job.org}</p>
+                {points.length > 0 && (
+                  <ul class="prose-ink list-disc space-y-1.5 pl-5">
+                    {points.map((pt) => <li>{pt}</li>)}
+                  </ul>
+                )}
+              </div>
+            </Panel>
+          </li>
+        );
+      })
     }
   </ol>
 </section>

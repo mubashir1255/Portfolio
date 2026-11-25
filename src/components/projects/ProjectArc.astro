@@ -1,10 +1,11 @@
 ---
-/** A featured project: a "story arc" with a Problem → Build → Result strip, demo video and diagram slots. */
+/** A featured project: a "story arc" with a Problem → Build → Result strip, demo video and diagram. Unwritten parts are hidden. */
 import Panel from '@/components/ui/Panel.astro';
 import ImageSlot from '@/components/ui/ImageSlot.astro';
 import ProjectLinks from './ProjectLinks.astro';
 import VideoSlot from './VideoSlot.astro';
 import type { Project } from '@/data/projects';
+import { isTodo } from '@/lib';
 
 interface Props {
   project: Project;
@@ -13,13 +14,15 @@ interface Props {
 
 const { project: p, arc } = Astro.props;
 const cs = p.caseStudy;
-const beats = cs ? ([['Problem', cs.problem], ['Build', cs.build], ['Result', cs.result]] as const) : [];
+// Unwritten beats (e.g. a TODO result) are left out until they're filled in.
+const beats = cs ? ([['Problem', cs.problem], ['Build', cs.build], ['Result', cs.result]] as const).filter(([, text]) => !isTodo(text)) : [];
+const hasMedia = !!(cs?.video || cs?.diagram);
 const headingId = `project-${p.slug}-title`;
 ---
 
 <Panel as="article" id={`project-${p.slug}`} class="project space-y-8 !p-5 sm:!p-8" data-categories={p.categories.join(' ')} aria-labelledby={headingId}>
-  <div class="grid gap-8 lg:grid-cols-[1.2fr_1fr]">
-    <ImageSlot image={p.image} alt={p.imageAlt} placeholder={`TODO: ${p.title} screenshot`} sizes="(min-width: 1024px) 560px, calc(100vw - 5rem)" />
+  <div class:list={['grid gap-8', p.image && 'lg:grid-cols-[1.2fr_1fr]']}>
+    {p.image && <ImageSlot image={p.image} alt={p.imageAlt} sizes="(min-width: 1024px) 560px, calc(100vw - 5rem)" />}
     <div class="space-y-4">
       <p class="kicker">Arc {String(arc).padStart(2, '0')} · {p.meta}</p>
       <h3 id={headingId} class="display text-4xl sm:text-5xl">{p.title}</h3>
@@ -35,30 +38,36 @@ const headingId = `project-${p.slug}-title`;
   </div>
 
   {
-    cs && (
-      <>
-        <ol class="case-strip" aria-label={`${p.title} case study`}>
-          {beats.map(([label, text], i) => (
-            <li class="panel !p-4">
-              <p class="case-strip__label">
-                <span>{String(i + 1).padStart(2, '0')}</span>
-                {label}
-              </p>
-              <p class="mt-1 text-[0.95rem] text-ink-soft">{text}</p>
-            </li>
-          ))}
-        </ol>
-        <div class="grid gap-6 md:grid-cols-2">
+    beats.length > 0 && (
+      <ol class="case-strip" style={`--beats: ${beats.length}`} aria-label={`${p.title} case study`}>
+        {beats.map(([label, text], i) => (
+          <li class="panel !p-4">
+            <p class="case-strip__label">
+              <span>{String(i + 1).padStart(2, '0')}</span>
+              {label}
+            </p>
+            <p class="mt-1 text-[0.95rem] text-ink-soft">{text}</p>
+          </li>
+        ))}
+      </ol>
+    )
+  }
+  {
+    hasMedia && (
+      <div class:list={['grid gap-6', cs?.video && cs?.diagram && 'md:grid-cols-2']}>
+        {cs?.video && (
           <figure class="space-y-2">
             <VideoSlot url={cs.video} title={p.title} />
             <figcaption class="text-sm font-semibold text-ink-soft">Demo video</figcaption>
           </figure>
+        )}
+        {cs?.diagram && (
           <figure class="space-y-2">
-            <ImageSlot image={cs.diagram} alt={`${p.title} architecture diagram`} placeholder="TODO: architecture diagram" ratio={cs.diagram ? "16 / 9" : "3 / 1"} />
+            <ImageSlot image={cs.diagram} alt={`${p.title} architecture diagram`} ratio="16 / 9" />
             <figcaption class="text-sm font-semibold text-ink-soft">Architecture</figcaption>
           </figure>
-        </div>
-      </>
+        )}
+      </div>
     )
   }
 </Panel>

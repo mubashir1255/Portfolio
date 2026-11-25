@@ -14,7 +14,7 @@ const headingId = `project-${p.slug}-title`;
 ---
 
 <Panel as="article" id={`project-${p.slug}`} lift class="project flex flex-col gap-4 !p-4" data-categories={p.categories.join(' ')} aria-labelledby={headingId}>
-  <ImageSlot image={p.image} alt={p.imageAlt} placeholder="TODO: screenshot" sizes="(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw" />
+  {p.image && <ImageSlot image={p.image} alt={p.imageAlt} sizes="(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw" />}
   <div class="flex flex-1 flex-col gap-3">
     <p class="kicker">{p.meta}</p>
     <h4 id={headingId} class="display text-2xl">{p.title}</h4>

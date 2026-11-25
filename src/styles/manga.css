@@ -850,7 +850,7 @@ sakuga-tabs {
   }
   @media (min-width: 768px) {
     .case-strip {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(var(--beats, 3), 1fr);
     }
     .case-strip > li:not(:last-child)::after {
       content: "→";
