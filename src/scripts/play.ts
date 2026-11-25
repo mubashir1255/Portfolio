@@ -75,15 +75,15 @@ function loadFile(file: string) {
   return p;
 }
 
-/** Ink, paper and one red, instead of the library's lavender. */
+/** Ink, paper and electric blue, instead of the library's lavender and pink. */
 function theme(fx: SakugaFX) {
   Object.assign(fx.P, {
     fill: '#fffdf8',
-    shade: '#ebe7dc',
+    shade: '#d6e4ff',
     line: '#14120f',
-    accent: '#e63946',
+    accent: '#0057ff',
     ink: '#14120f',
-    sfx: ['#e63946', '#fffdf8'],
+    sfx: ['#0057ff', '#fffdf8'],
   });
 }
 

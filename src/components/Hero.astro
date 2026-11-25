@@ -55,7 +55,7 @@ import { withBase } from '@/lib';
         <ImageSlot alt="Manga-style portrait of Mubashir" placeholder="TODO: Mubashir's manga avatar" ratio="1 / 1" loading="eager" />
       </Panel>
       <Panel as="aside" tone="ink" aria-labelledby="now-title" class="w-full">
-        <h2 id="now-title" class="kicker !text-accent">Now</h2>
+        <h2 id="now-title" class="kicker">Now</h2>
         <ul class="now-list mt-3 space-y-2 font-semibold">
           {now.map((item) => <li>{item}</li>)}
         </ul>
@@ -74,7 +74,7 @@ import { withBase } from '@/lib';
           featuredProjects.map((p, i) => (
             <li>
               <a href={`#project-${p.slug}`} class="ink-link block text-lg leading-tight">
-                <span class="text-accent-ink">{String(i + 1).padStart(2, '0')}</span> {p.title}
+                <span class="text-accent">{String(i + 1).padStart(2, '0')}</span> {p.title}
               </a>
               <span class="text-sm text-ink-soft">{p.meta}</span>
             </li>

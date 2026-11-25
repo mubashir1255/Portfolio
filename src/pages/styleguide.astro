@@ -18,8 +18,10 @@ const swatches = [
   { name: 'sheet', hex: '#fffdf8', use: 'Panel fill' },
   { name: 'ink', hex: '#14120f', use: 'Text, borders, shadows' },
   { name: 'ink-soft', hex: '#4a453d', use: 'Body copy (9.4:1 on paper)' },
-  { name: 'accent', hex: '#e63946', use: 'Fills, large type, shadows only (3.7:1)' },
-  { name: 'accent-ink', hex: '#b8202c', use: 'Small red text, hover fills (5.8:1)' },
+  { name: 'accent', hex: '#0057ff', use: 'Text, fills, focus, chapter numbers (5.0:1 on paper, 5.5:1 under white)' },
+  { name: 'accent-deep', hex: '#0041c2', use: 'Hover and pressed (7.5:1)' },
+  { name: 'accent-tint', hex: '#d6e4ff', use: 'Halftone dots, highlights (never text)' },
+  { name: 'accent-night', hex: '#4d8bff', use: 'Blue on ink panels and night mode (5.7:1 on ink)' },
 ];
 const agrobid = projects.find((p) => p.slug === 'agrobid')!;
 ---

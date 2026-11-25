@@ -22,10 +22,15 @@
   --color-ink: #14120f;
   --color-ink-soft: #4a453d;
   --color-ink-faint: #8a8478;
-  /* The one accent. #e63946 for fills, large type and shadows;
-     #b8202c for small text and hover fills (AA on paper and with white text). */
-  --color-accent: #e63946;
-  --color-accent-ink: #b8202c;
+  /* The one accent: electric blue, and what's derived from it.
+     accent       5.0:1 on paper, 5.5:1 under white text: text, fills, focus rings, chapter numbers
+     accent-deep  hover and pressed states (7.5:1 on paper)
+     accent-tint  halftone dots and highlights (never text)
+     accent-night on ink/dark surfaces and for night mode (5.7:1 on ink) */
+  --color-accent: #0057ff;
+  --color-accent-deep: #0041c2;
+  --color-accent-tint: #d6e4ff;
+  --color-accent-night: #4d8bff;
 
   --font-display: "Anton", "Impact", "Arial Narrow", sans-serif;
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
@@ -39,7 +44,7 @@
   --radius: 4px;
 
   /* Halftone dots */
-  --dot-color: rgb(20 18 15 / 0.13);
+  --dot-color: rgb(0 87 255 / 0.16);
   --dot-size: 1.1px;
   --dot-gap: 9px;
 
@@ -48,7 +53,7 @@
 
 /* Play mode (opt-in, set on <html> by the nav switch): louder halftone, bigger tilts. */
 :root[data-play="on"] {
-  --dot-color: rgb(20 18 15 / 0.22);
+  --dot-color: rgb(0 87 255 / 0.3);
   --dot-size: 1.6px;
   --dot-gap: 7px;
 }
@@ -93,7 +98,7 @@ a {
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--color-accent-ink);
+    color: var(--color-accent);
   }
   .jp {
     font-family: var(--font-jp);
@@ -112,7 +117,7 @@ a {
     text-decoration-thickness: 2px;
   }
   .ink-link:hover {
-    color: var(--color-accent-ink);
+    color: var(--color-accent-deep);
   }
 }
 
@@ -155,6 +160,7 @@ a {
   .panel--ink {
     background-color: var(--color-ink);
     color: var(--color-paper);
+    --color-accent: var(--color-accent-night); /* blue text on ink needs the brighter shade */
     box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--color-accent);
   }
   .panel--accent-shadow {
@@ -333,13 +339,13 @@ a {
     box-shadow: 0 0 0 transparent;
   }
   .btn--primary {
-    background: var(--color-ink);
-    color: var(--color-paper);
-    box-shadow: 4px 4px 0 var(--color-accent);
-  }
-  .btn--primary:hover {
-    background: var(--color-accent-ink);
+    background: var(--color-accent);
     color: #fff;
+    box-shadow: 4px 4px 0 var(--color-ink);
+  }
+  .btn--primary:hover,
+  .btn--primary:active {
+    background: var(--color-accent-deep);
   }
   .btn--secondary {
     background: var(--color-sheet);
@@ -347,7 +353,7 @@ a {
     box-shadow: 4px 4px 0 var(--color-ink);
   }
   .btn--secondary:hover {
-    background: var(--color-paper-deep);
+    background: var(--color-accent-tint);
   }
   .btn--small {
     min-height: 2.3rem;
@@ -403,7 +409,7 @@ a {
     border-radius: 2px;
   }
   .badge--accent {
-    background: var(--color-accent-ink);
+    background: var(--color-accent);
     color: #fff;
   }
 }
@@ -471,7 +477,7 @@ a {
     color: var(--color-ink-soft);
   }
   a.stat:hover .stat__value {
-    color: var(--color-accent-ink);
+    color: var(--color-accent-deep);
   }
 }
 
@@ -498,7 +504,7 @@ a {
     pointer-events: none;
     background-image: radial-gradient(
       circle,
-      rgb(20 18 15 / 0.18) var(--dot-size),
+      rgb(0 87 255 / 0.28) var(--dot-size),
       transparent calc(var(--dot-size) + 0.6px)
     );
     background-size: var(--dot-gap) var(--dot-gap);
@@ -554,7 +560,7 @@ a {
     animation: glitch-a 0.65s steps(1, end) 0.4s 1 both;
   }
   .glitch__layer--b {
-    color: var(--color-ink-faint);
+    color: var(--color-accent-night);
     animation: glitch-b 0.65s steps(1, end) 0.4s 1 both;
   }
   /* A different animation name restarts it on hover. */
@@ -625,8 +631,8 @@ a {
   --sk-card: var(--color-sheet);
   --sk-ink: var(--color-ink);
   --sk-dim: var(--color-ink-soft);
-  --sk-soft: var(--color-paper-deep);
-  --sk-pri: var(--color-accent-ink);
+  --sk-soft: var(--color-accent-tint);
+  --sk-pri: var(--color-accent);
   --sk-pri-ink: #fff;
   --sk-on-pri: #fff;
   --sk-acc: var(--color-accent);
@@ -773,7 +779,7 @@ sakuga-tabs {
     transition: translate 0.25s var(--ease-pop);
   }
   .play-switch[aria-checked="true"] .play-switch__track {
-    background: var(--color-accent-ink);
+    background: var(--color-accent);
   }
   .play-switch[aria-checked="true"] .play-switch__track::after {
     translate: 1.25rem 0;
@@ -815,7 +821,7 @@ sakuga-tabs {
   }
   .now-list li::before {
     content: "▸";
-    color: var(--color-accent);
+    color: var(--color-accent-night);
   }
 }
 
@@ -876,7 +882,7 @@ sakuga-tabs {
     letter-spacing: 0.03em;
   }
   .case-strip__label span {
-    color: var(--color-accent-ink);
+    color: var(--color-accent);
     margin-right: 0.35rem;
   }
   .video-facade {
@@ -893,7 +899,8 @@ sakuga-tabs {
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 50%;
-    background: var(--color-accent-ink);
+    background: var(--color-accent);
+    color: #fff;
     font-size: 1.25rem;
   }
   .video-frame iframe {
