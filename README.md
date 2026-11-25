@@ -2,7 +2,7 @@
 
 https://mubashir1255.github.io/Portfolio/  click here to open my Portfolio
 
-My personal portfolio, styled as a manga volume: comic panels, halftone screentone and numbered chapters
+My personal portfolio in a comic-panel style: thick ink panels, halftone dots and numbered chapters
 (Experience, Projects, Skills, Journey, Contact). It's quiet by default. The opt-in **Play mode** in the nav adds
 anime-style effects to buttons, tabs and toasts, using [sakuga-vfx](https://github.com/finktheartist/sakuga-vfx) (MIT).
 
@@ -59,4 +59,4 @@ The contact form posts to Web3Forms. Set `PUBLIC_WEB3FORMS_ACCESS_KEY` in `.env.
 ## Credits
 
 UI effects: [sakuga-vfx](https://github.com/finktheartist/sakuga-vfx) by finktheartist, MIT (`public/sakuga-vfx/LICENSE`).
-Fonts: Anton, Inter, Noto Sans JP (SIL Open Font License).
+Fonts: Anton, Inter (SIL Open Font License).

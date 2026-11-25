@@ -6,14 +6,6 @@
  * Every colour, font and size lives in the tokens below; components only reference tokens.
  */
 
-@font-face {
-  font-family: "Noto Sans JP Labels";
-  /* Subset to the few label characters used on the site (see src/assets/fonts). */
-  src: url("../assets/fonts/noto-sans-jp-labels.woff2") format("woff2");
-  font-weight: 800;
-  font-display: swap;
-}
-
 @theme {
   /* Paper & ink */
   --color-paper: #f6f4ee;
@@ -34,7 +26,6 @@
 
   --font-display: "Anton", "Impact", "Arial Narrow", sans-serif;
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-jp: "Noto Sans JP Labels", "Hiragino Sans", "Yu Gothic", sans-serif;
 }
 
 :root {
@@ -99,11 +90,6 @@ a {
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--color-accent);
-  }
-  .jp {
-    font-family: var(--font-jp);
-    font-weight: 800;
-    letter-spacing: 0.05em;
   }
   .prose-ink {
     color: var(--color-ink-soft);
@@ -192,7 +178,7 @@ a {
 @layer components {
   .chapter-head {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto 1fr;
     align-items: end;
     gap: 0.75rem 1.25rem;
     border-bottom: var(--line) solid var(--color-ink);
@@ -210,15 +196,6 @@ a {
     text-transform: uppercase;
     font-size: clamp(2rem, 6vw, 3.5rem);
     line-height: 0.95;
-  }
-  .chapter-head__jp {
-    align-self: start;
-    writing-mode: vertical-rl;
-    background: var(--color-ink);
-    color: var(--color-paper);
-    padding: 0.6rem 0.35rem;
-    font-size: 1.25rem;
-    border-radius: 2px;
   }
 }
 
@@ -988,27 +965,32 @@ sakuga-tabs {
   }
 }
 
-/* ── Finale: "To be continued… つづく" ── */
+/* ── Finale: "Further info will be revealed soon" ── */
 @layer components {
   .finale {
     overflow: hidden;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 0.5rem 2rem;
-    padding: clamp(2rem, 6vw, 4rem) !important;
+    container-type: inline-size; /* the text is sized from this panel's width */
+    padding: clamp(1.75rem, 5vw, 3.5rem) !important;
   }
   .finale__lines {
     background: repeating-conic-gradient(from 0deg at 50% 50%, #f6f4ee 0deg 0.9deg, transparent 0.9deg 5deg);
     opacity: 0.1;
   }
+  /* Fills the panel edge to edge: the phrase is 14.37em wide in Anton (one line),
+     each half about 7.1em (two lines on narrow panels). Re-measure if the words change. */
   .finale__text {
-    font-size: clamp(2.5rem, 9vw, 6rem);
+    margin: 0;
+    font-size: 6.85cqi;
+    line-height: 1;
+    white-space: nowrap;
   }
-  .finale__jp {
-    font-size: clamp(2.5rem, 8vw, 5rem);
-    color: var(--color-accent-night);
+  @container (max-width: 640px) {
+    .finale__text {
+      font-size: 13.9cqi;
+    }
+    .finale__line {
+      display: block;
+    }
   }
 }
 

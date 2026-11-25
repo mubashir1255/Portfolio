@@ -13,7 +13,7 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || 'e9d46f6d-269e-
 ---
 
 <section id="contact" class="chapter wrap space-y-10" aria-labelledby="contact-title">
-  <ChapterHeader num={5} title="Contact" jp="連絡" headingId="contact-title" />
+  <ChapterHeader num={5} title="Contact" headingId="contact-title" />
 
   <div class="grid gap-10 lg:grid-cols-[1fr_1.3fr]">
     <div class="space-y-6">
@@ -87,8 +87,9 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || 'e9d46f6d-269e-
 
   <Panel as="div" tone="ink" class="finale">
     <div class="speed-lines finale__lines" aria-hidden="true"></div>
-    <p class="relative display finale__text">To be continued…</p>
-    <p class="relative jp finale__jp" lang="ja">つづく</p>
+    <p class="relative display finale__text">
+      <span class="finale__line">Further info will</span> <span class="finale__line">be revealed <span class="text-accent">soon</span></span>
+    </p>
   </Panel>
 </section>
 

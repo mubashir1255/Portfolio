@@ -3,25 +3,17 @@ import ChapterHeader from '@/components/ui/ChapterHeader.astro';
 import Panel from '@/components/ui/Panel.astro';
 import { episodes } from '@/data/journey';
 
-const kanji = ['一', '二', '三', '四', '五', '六'];
 ---
 
 <section id="journey" class="chapter wrap space-y-10" aria-labelledby="journey-title">
-  <ChapterHeader num={4} title="Journey" jp="旅路" headingId="journey-title" />
+  <ChapterHeader num={4} title="Journey" headingId="journey-title" />
   <ol class="timeline">
     {
       episodes.map((ep, i) => (
         <li class="timeline__item">
           <span class="timeline__dot" aria-hidden="true" />
           <Panel as="article" class:list={['!p-5', i === episodes.length - 1 && 'panel--accent-shadow']}>
-            <p class="kicker">
-              Ep. {i + 1}
-              {kanji[i] && (
-                <span class="jp ml-2 text-ink-soft" lang="ja" aria-hidden="true">
-                  第{kanji[i]}話
-                </span>
-              )}
-            </p>
+            <p class="kicker">Ep. {i + 1}</p>
             <h3 class="mt-1 flex flex-wrap items-baseline gap-x-3">
               <span class="display text-3xl text-accent">{ep.when}</span>
               <span class="text-lg font-bold">{ep.title}</span>

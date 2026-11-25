@@ -4,7 +4,6 @@ import Button from '@/components/ui/Button.astro';
 import Stat from '@/components/ui/Stat.astro';
 import ImageSlot from '@/components/ui/ImageSlot.astro';
 import GlitchName from '@/components/ui/GlitchName.astro';
-import SpeechBubble from '@/components/ui/SpeechBubble.astro';
 import { person, socials, resumePath } from '@/data/site';
 import { now } from '@/data/now';
 import { stats } from '@/data/stats';
@@ -19,10 +18,6 @@ import avatar from '@/assets/avatar.jpg';
 
   <div class="wrap relative grid gap-10 lg:grid-cols-[1.35fr_1fr] lg:items-start">
     <div class="space-y-6">
-      <SpeechBubble variant="caption" as="p">
-        Vol. 01 <span class="jp ml-1" lang="ja" aria-hidden="true">第一巻</span>
-      </SpeechBubble>
-
       <h1 id="hero-name" class="display hero__name relative">
         <span class="speed-lines" aria-hidden="true"></span>
         <GlitchName text={person.name} class="relative" />
