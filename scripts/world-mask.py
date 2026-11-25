@@ -2,8 +2,10 @@
 
 Source: Natural Earth 1:110m land (public domain), e.g.
 https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_land.geojson
-Usage: python3 scripts/world-mask.py ne_110m_land.geojson > src/data/world-mask.ts
-Each row is one latitude band (north to south), packed as hex: 1 bit per cell, 1 = land.
+Pakistan's outline comes from Natural Earth 1:50m admin-0 countries (public domain):
+https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_admin_0_countries.geojson
+Usage: python3 scripts/world-mask.py ne_110m_land.geojson ne_50m_admin_0_countries.geojson > src/data/world-mask.ts
+Each row is one latitude band (north to south), packed as hex: 1 bit per cell, 1 = inside.
 """
 import json
 import sys
@@ -12,7 +14,39 @@ from PIL import Image, ImageDraw
 W, H = 144, 72  # 2.5 degrees per cell
 
 
-def main(path: str) -> None:
+def rings(geom):
+    polys = geom["coordinates"] if geom["type"] == "MultiPolygon" else [geom["coordinates"]]
+    for poly in polys:
+        yield poly[0], poly[1:]
+
+
+def pack(px, w, h, threshold=70):
+    rows = []
+    for y in range(h):
+        bits = "".join("1" if px[x, y] > threshold else "0" for x in range(w))
+        rows.append(f"{int(bits, 2):0{(w + 3) // 4}x}")
+    return rows
+
+
+def country_mask(path: str, a3: str, lon0: float, lat0: float, lon1: float, lat1: float, step: float):
+    """A finer grid for one country over its bounding box (lon0..lon1, lat1 north .. lat0 south)."""
+    data = json.load(open(path))
+    feature = next(f for f in data["features"] if f["properties"].get("ADM0_A3") == a3)
+    w, h = round((lon1 - lon0) / step), round((lat1 - lat0) / step)
+    w += -w % 4  # whole hex digits
+    scale = 8
+    img = Image.new("L", (w * scale, h * scale), 0)
+    draw = ImageDraw.Draw(img)
+    to_px = lambda lon, lat: ((lon - lon0) / step * scale, (lat1 - lat) / step * scale)
+    for outer, holes in rings(feature["geometry"]):
+        draw.polygon([to_px(*pt[:2]) for pt in outer], fill=255)
+        for hole in holes:
+            draw.polygon([to_px(*pt[:2]) for pt in hole], fill=0)
+    small = img.resize((w, h), Image.BOX)
+    return w, h, pack(small.load(), w, h, threshold=110)
+
+
+def main(path: str, countries: str | None = None) -> None:
     data = json.load(open(path))
     scale = 8  # draw large, then shrink, so thin land isn't lost
     img = Image.new("L", (W * scale, H * scale), 0)
@@ -39,7 +73,16 @@ def main(path: str) -> None:
     for r in rows:
         print(f"  '{r}',")
     print("];")
+    if countries:
+        lon0, lat0, lon1, lat1, step = 60.5, 23.5, 77.5, 37.5, 0.25
+        w, h, prow = country_mask(countries, "PAK", lon0, lat0, lon1, lat1, step)
+        print()
+        print("/** Pakistan (Natural Earth 1:50m), finer grid over its bounding box; same packing, north to south. */")
+        print(f"export const PAK = {{ lon0: {lon0}, lat1: {lat1}, step: {step}, w: {w}, h: {h}, rows: [")
+        for r in prow:
+            print(f"  '{r}',")
+        print("] };")
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    main(sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else None)

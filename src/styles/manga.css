@@ -1185,16 +1185,38 @@ sakuga-tabs {
   line-height: 1;
   white-space: pre;
   user-select: none;
-  font-size: calc(min(74vh, 92vw) / (var(--cols) * 0.6));
-  color: rgb(20 18 15 / 0.2);
+  font-size: calc(min(78vh, 94vw) / (var(--cols) * 0.6));
+  color: rgb(20 18 15 / 0.34);
 }
 .bg-globe__art b {
   font-weight: inherit;
-  color: rgb(0 87 255 / 0.5);
+  color: rgb(0 87 255 / 0.62);
 }
+/* Pakistan: blue fill, solid blue border */
+.bg-globe__art em {
+  font-style: normal;
+  color: rgb(0 87 255 / 0.78);
+}
+.bg-globe__art u {
+  text-decoration: none;
+  color: var(--color-accent);
+}
+/* Lahore: a shining blue light */
 .bg-globe__art i {
   font-style: normal;
-  color: var(--color-accent);
+  color: #3d8bff;
+  text-shadow:
+    0 0 3px #7fb0ff,
+    0 0 8px #0057ff,
+    0 0 16px rgb(0 87 255 / 0.8),
+    0 0 28px rgb(0 87 255 / 0.5);
+}
+:root[data-play="on"] .bg-globe__art i {
+  animation: lahore-glow 1.6s ease-in-out infinite;
+}
+@keyframes lahore-glow {
+  0%, 100% { text-shadow: 0 0 3px #7fb0ff, 0 0 8px #0057ff, 0 0 16px rgb(0 87 255 / 0.8), 0 0 28px rgb(0 87 255 / 0.5); }
+  50% { text-shadow: 0 0 4px #a9c9ff, 0 0 12px #0057ff, 0 0 26px rgb(0 87 255 / 0.95), 0 0 44px rgb(0 87 255 / 0.65); }
 }
 
 /* The hero keeps calm halftone even in Play mode, so the globe behind it reads clearly. */

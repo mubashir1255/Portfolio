@@ -1,27 +1,31 @@
 /**
  * ASCII globe renderer, shared by the build (first frame, works without JS) and the browser
  * (scroll-driven rotation). Land is ink ASCII shaded by a fixed light; the lat/long grid is blue
- * dots that turn with the globe; Lahore gets a blue marker.
+ * dots that turn with the globe; Pakistan is filled blue with a solid blue border; Lahore is a
+ * glowing blue light.
  *
  * Geometry is precomputed once per size: rotating only shifts longitude, so a frame is just
  * mask lookups, cheap enough to redraw on every scroll frame.
  */
-import { MASK_W, MASK_H, WORLD_MASK } from '@/data/world-mask';
+import { MASK_W, MASK_H, WORLD_MASK, PAK } from '@/data/world-mask';
 
 const DEG = Math.PI / 180;
 const TILT = 18 * DEG; // axial tilt toward the viewer, so the top of the globe shows
 const RAMP = '.:-=+*#'; // land, lit side last
 const HOME = { lat: 31.5, lon: 74.3 }; // Lahore
 
-/** Unpacked land bits: LAND[y][x] for a MASK_W x MASK_H equirectangular grid. */
-const LAND: Uint8Array[] = WORLD_MASK.map((hex) => {
-  const row = new Uint8Array(MASK_W);
+const unpack = (hex: string, w: number) => {
+  const row = new Uint8Array(w);
   for (let i = 0; i < hex.length; i++) {
     const nib = parseInt(hex[i], 16);
-    for (let b = 0; b < 4; b++) row[i * 4 + b] = (nib >> (3 - b)) & 1;
+    for (let b = 0; b < 4 && i * 4 + b < w; b++) row[i * 4 + b] = (nib >> (3 - b)) & 1;
   }
   return row;
-});
+};
+/** Unpacked land bits: LAND[y][x] for a MASK_W x MASK_H equirectangular grid. */
+const LAND: Uint8Array[] = WORLD_MASK.map((hex) => unpack(hex, MASK_W));
+/** Pakistan, on its own finer grid. */
+const PAK_BITS: Uint8Array[] = PAK.rows.map((hex) => unpack(hex, PAK.w));
 
 interface Cell {
   inside: boolean;
@@ -78,6 +82,14 @@ const isLand = (lat: number, lon: number) => {
   return LAND[y][x] === 1;
 };
 
+const wrapLon = (lon: number) => ((((lon + 180) % 360) + 360) % 360) - 180;
+
+const isPakistan = (lat: number, lon: number) => {
+  const x = Math.floor((wrapLon(lon) - PAK.lon0) / PAK.step);
+  const y = Math.floor((PAK.lat1 - lat) / PAK.step);
+  return x >= 0 && y >= 0 && x < PAK.w && y < PAK.h && PAK_BITS[y][x] === 1;
+};
+
 /** Is (lat, lon) on the blue grid: every 15 degrees, sampled sparsely so it reads as dots. */
 const onGrid = (lat: number, lon: number, c: number, r: number) => {
   const nearLon = Math.abs(((lon % 15) + 15) % 15 - 7.5) > 6.1;
@@ -85,14 +97,57 @@ const onGrid = (lat: number, lon: number, c: number, r: number) => {
   return (nearLon && r % 2 === 0) || (nearLat && c % 2 === 0);
 };
 
+type Tag = '' | 'b' | 'i' | 'u' | 'em';
+const enum K {
+  Empty,
+  Land,
+  Grid,
+  Rim,
+  Pak,
+  Home,
+}
+
 /**
- * One frame as HTML: plain text for land, <b> for blue grid dots, <i> for the home marker.
- * `centerLon` is the longitude facing the viewer.
+ * One frame as HTML: plain text for land, <b> blue grid dots, <em> Pakistan's fill,
+ * <u> Pakistan's border, <i> Lahore. `centerLon` is the longitude facing the viewer.
  */
 export function renderGlobe(g: GlobeGeometry, centerLon: number): string {
+  const { cols, rows, cells } = g;
+  // pass 1: what is in each cell this frame
+  const kind = new Uint8Array(cols * rows);
+  const shade = new Uint8Array(cols * rows);
+  let home = -1;
+  let homeDist = Infinity;
+  for (let i = 0; i < cells.length; i++) {
+    const cell = cells[i];
+    if (!cell.inside) continue;
+    const lon = cell.lon0 + centerLon;
+    const c = i % cols;
+    const r = (i / cols) | 0;
+    shade[i] = Math.min(RAMP.length - 1, Math.floor(cell.light * RAMP.length));
+    const dLat = cell.lat - HOME.lat;
+    const dLon = wrapLon(lon) - HOME.lon;
+    const dist = dLat * dLat + dLon * dLon;
+    if (dist < homeDist && dist < 9) {
+      homeDist = dist;
+      home = i;
+    }
+    if (isPakistan(cell.lat, lon)) kind[i] = K.Pak;
+    else if (isLand(cell.lat, lon)) kind[i] = K.Land;
+    else if (onGrid(cell.lat, lon, c, r)) kind[i] = K.Grid;
+    else if (cell.rim) kind[i] = K.Rim;
+  }
+  if (home >= 0) kind[home] = K.Home; // Lahore: the one cell closest to it
+  const isPk = (r: number, c: number) => {
+    if (r < 0 || c < 0 || r >= rows || c >= cols) return false;
+    const k = kind[r * cols + c];
+    return k === K.Pak || k === K.Home;
+  };
+
+  // pass 2: text, grouping runs of the same style
   let out = '';
-  let open: '' | 'b' | 'i' = '';
-  const put = (ch: string, tag: '' | 'b' | 'i') => {
+  let open: Tag = '';
+  const put = (ch: string, tag: Tag) => {
     if (tag !== open) {
       if (open) out += `</${open}>`;
       if (tag) out += `<${tag}>`;
@@ -100,21 +155,31 @@ export function renderGlobe(g: GlobeGeometry, centerLon: number): string {
     }
     out += ch;
   };
-  for (let r = 0; r < g.rows; r++) {
-    for (let c = 0; c < g.cols; c++) {
-      const cell = g.cells[r * g.cols + c];
-      if (!cell.inside) {
-        put(' ', '');
-        continue;
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const i = r * cols + c;
+      switch (kind[i]) {
+        case K.Home:
+          put('●', 'i');
+          break;
+        case K.Pak: {
+          const border = !isPk(r - 1, c) || !isPk(r + 1, c) || !isPk(r, c - 1) || !isPk(r, c + 1);
+          if (border) put('#', 'u');
+          else put(RAMP[Math.max(2, shade[i])], 'em');
+          break;
+        }
+        case K.Land:
+          put(RAMP[shade[i]], '');
+          break;
+        case K.Grid:
+          put('.', 'b');
+          break;
+        case K.Rim:
+          put('.', '');
+          break;
+        default:
+          put(' ', '');
       }
-      const lon = cell.lon0 + centerLon;
-      const lonWrapped = ((((lon + 180) % 360) + 360) % 360) - 180;
-      const home = Math.abs(cell.lat - HOME.lat) < 1.25 && Math.abs(lonWrapped - HOME.lon) < 1.5;
-      if (home) put('@', 'i');
-      else if (isLand(cell.lat, lon)) put(RAMP[Math.min(RAMP.length - 1, Math.floor(cell.light * RAMP.length))], '');
-      else if (onGrid(cell.lat, lon, c, r)) put('.', 'b');
-      else if (cell.rim) put('.', '');
-      else put(' ', '');
     }
     put('\n', '');
   }
