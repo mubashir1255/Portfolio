@@ -3,8 +3,7 @@
 export const person = {
   name: 'Mubashir Fayyaz',
   role: 'Full Stack Developer · Cloud · AI · Security',
-  // TODO: Mubashir to refine the pitch (draft below).
-  pitch: 'I build web apps that hold up in the real world — offline, in Urdu, on budget phones — and I care about keeping them secure.',
+  pitch: 'I build web apps that work in the real world — offline, in Urdu, on everyday phones — and I keep them secure.',
   degree: 'BS IET',
   university: 'University of Lahore',
   location: 'Pakistan · open to remote worldwide',

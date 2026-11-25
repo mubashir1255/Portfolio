@@ -29,6 +29,7 @@ export interface Project {
   summary: string;
   points: string[];
   tech: string[];
+  /** first entry is the main category; extra entries are tags (e.g. Security) */
   categories: Category[];
   image?: ImageMetadata;
   imageAlt: string;
@@ -36,6 +37,8 @@ export interface Project {
   /** source is private: show a badge instead of a dead link */
   privateRepo?: boolean;
   featured?: boolean;
+  /** false = listed, but not counted in the hero stats (e.g. this portfolio) */
+  countInStats?: boolean;
   caseStudy?: CaseStudy;
 }
 
@@ -52,7 +55,7 @@ export const projects: Project[] = [
       'OTP verification; installs as a PWA or an Android APK',
     ],
     tech: ['Next.js 16', 'Supabase', 'PostgreSQL', 'Gemini', 'Tailwind'],
-    categories: ['Web', 'AI'],
+    categories: ['Web', 'AI', 'Security'],
     image: agrobid,
     imageAlt: 'AgroBid Pakistan listing page with live auction countdown',
     links: { demo: 'https://agrobid-pk.vercel.app' },
@@ -103,17 +106,17 @@ export const projects: Project[] = [
       'Ed25519-signed licence keys, staff permissions, daily SQLite backups',
     ],
     tech: ['Electron', 'React', 'Express', 'SQLite', 'Capacitor'],
-    categories: ['Desktop'],
+    categories: ['Desktop', 'Security'],
     image: undefined, // TODO: Mubashir to add a Qevora POS screenshot
     imageAlt: 'Qevora POS checkout screen',
-    links: {}, // TODO: Mubashir to add a demo link if one exists
+    links: {}, // no public demo yet
     privateRepo: true,
     featured: true,
     caseStudy: {
       problem: 'Pharmacies need to track batches and expiry dates, and to run more than one till without a server.',
       build: 'An Electron + React till with an Express/SQLite core on one PC; Android tills pair by QR code via Capacitor.',
       result: 'TODO: Mubashir to fill.',
-      video: undefined, // TODO: Mubashir to add a 60–90 s demo video URL
+      video: undefined, // TODO: Mubashir to add demo video (recording in progress)
       diagram: undefined, // TODO: Mubashir to add an architecture diagram
     },
   },
@@ -205,12 +208,16 @@ export const projects: Project[] = [
     categories: ['Web'],
     imageAlt: 'This portfolio’s hero section',
     links: { source: 'https://github.com/mubashir1255/Portfolio' },
+    countInStats: false,
   },
 ];
 
 export const featuredProjects = projects.filter((p) => p.featured);
 export const otherProjects = projects.filter((p) => !p.featured);
 
-/** Filter tabs: only categories that actually have projects, so no tab is ever empty. */
+/** Filter tabs: a category gets a tab only when at least 2 projects carry it. */
+const MIN_PER_TAB = 2;
 const order: Category[] = ['Web', 'AI', 'Security', 'Desktop'];
-export const projectCategories = order.filter((c) => projects.some((p) => p.categories.includes(c)));
+export const projectCategories = order.filter(
+  (c) => projects.filter((p) => p.categories.includes(c)).length >= MIN_PER_TAB,
+);

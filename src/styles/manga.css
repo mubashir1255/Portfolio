@@ -619,3 +619,286 @@ a {
     transform: none;
   }
 }
+
+/* ── sakuga-vfx theme (only matters in Play mode, when the controls load) ── */
+:root {
+  --sk-card: var(--color-sheet);
+  --sk-ink: var(--color-ink);
+  --sk-dim: var(--color-ink-soft);
+  --sk-soft: var(--color-paper-deep);
+  --sk-pri: var(--color-accent-ink);
+  --sk-pri-ink: #fff;
+  --sk-on-pri: #fff;
+  --sk-acc: var(--color-accent);
+  --sk-track: var(--color-paper-deep);
+  --sk-r: var(--radius);
+  --sk-bw: var(--line);
+  --sk-sh: 4px 4px 0 var(--color-ink);
+}
+sakuga-tabs {
+  font: 600 15px/1.4 var(--font-sans);
+}
+
+/* ── Play-mode effects on native buttons ── */
+@layer components {
+  /* The springs drive transform in Play mode; CSS must not fight them. */
+  :root[data-play="on"] .btn[data-sakuga] {
+    transition: background-color 0.15s ease;
+  }
+  :root[data-play="on"] .btn[data-sakuga]:active {
+    transform: none;
+  }
+  .btn.is-impact {
+    background: var(--color-ink) !important;
+    color: var(--color-sheet) !important;
+    box-shadow: none !important;
+  }
+  .btn.is-done::after {
+    content: "✓";
+    margin-left: 0.35rem;
+    color: var(--color-accent);
+  }
+}
+
+/* ── Nav ── */
+@layer components {
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: var(--color-paper);
+    border-bottom: var(--line) solid var(--color-ink);
+  }
+  .site-nav__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.25rem;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding: 0.6rem 1.25rem;
+  }
+  .nav-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--color-ink);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.875rem;
+  }
+  .nav-brand__mark {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    border-radius: 2px;
+    box-shadow: 3px 3px 0 var(--color-accent);
+  }
+  .nav-links {
+    order: 3;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.15rem 0.8rem;
+    width: 100%;
+    font-size: 0.8125rem;
+    font-weight: 700;
+  }
+  .nav-links a {
+    color: var(--color-ink);
+    text-decoration: none;
+    padding-block: 0.3rem;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+  }
+  @media (min-width: 640px) {
+    .nav-links {
+      gap: 0.15rem 1.1rem;
+      font-size: 0.875rem;
+    }
+  }
+  .nav-links a:hover {
+    border-bottom-color: var(--color-accent);
+  }
+  @media (min-width: 1024px) {
+    .nav-links {
+      order: 0;
+      width: auto;
+      margin-left: auto;
+    }
+  }
+  /* Play mode switch: a native role="switch" button. */
+  .play-switch {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: none;
+    border: 0;
+    color: var(--color-ink);
+    cursor: pointer;
+    padding: 0.25rem;
+  }
+  @media (min-width: 1024px) {
+    .play-switch {
+      margin-left: 0;
+    }
+  }
+  .play-switch__track {
+    position: relative;
+    width: 2.75rem;
+    height: 1.5rem;
+    border: var(--line-thin) solid var(--color-ink);
+    border-radius: 999px;
+    background: var(--color-sheet);
+    transition: background-color 0.2s ease;
+  }
+  .play-switch__track::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background: var(--color-ink);
+    transition: translate 0.25s var(--ease-pop);
+  }
+  .play-switch[aria-checked="true"] .play-switch__track {
+    background: var(--color-accent-ink);
+  }
+  .play-switch[aria-checked="true"] .play-switch__track::after {
+    translate: 1.25rem 0;
+    background: var(--color-sheet);
+  }
+}
+
+/* ── Page frame ── */
+@layer components {
+  .wrap {
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  .chapter {
+    padding-block: 4.5rem;
+  }
+}
+
+/* ── Hero ── */
+@layer components {
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding-block: 2.5rem 3rem;
+  }
+  .hero__dots {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .hero__name {
+    font-size: clamp(3.25rem, 11vw, 7.5rem);
+  }
+  .now-list li {
+    display: grid;
+    grid-template-columns: 1.25rem 1fr;
+    gap: 0.4rem;
+  }
+  .now-list li::before {
+    content: "▸";
+    color: var(--color-accent);
+  }
+}
+
+/* ── Projects ── */
+@layer components {
+  .filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .filter__btn {
+    padding: 0.4rem 1rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    background: var(--color-sheet);
+    color: var(--color-ink);
+    border: var(--line-thin) solid var(--color-ink);
+    border-radius: var(--radius);
+    cursor: pointer;
+    box-shadow: 3px 3px 0 var(--color-ink);
+  }
+  .filter__btn[aria-pressed="true"] {
+    background: var(--color-ink);
+    color: var(--color-paper);
+    box-shadow: 3px 3px 0 var(--color-accent);
+  }
+  /* Problem → Build → Result: three small panels in a row */
+  .case-strip {
+    display: grid;
+    gap: 1.25rem;
+    counter-reset: beat;
+  }
+  @media (min-width: 768px) {
+    .case-strip {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .case-strip > li:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      right: -1.15rem;
+      top: 50%;
+      translate: 0 -50%;
+      z-index: 1;
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      color: var(--color-accent);
+    }
+  }
+  .case-strip > li {
+    position: relative;
+    padding: 1rem;
+    box-shadow: 4px 4px 0 var(--color-ink);
+  }
+  .case-strip__label {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: 1.15rem;
+    letter-spacing: 0.03em;
+  }
+  .case-strip__label span {
+    color: var(--color-accent-ink);
+    margin-right: 0.35rem;
+  }
+  .video-facade {
+    display: grid;
+    place-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--color-paper);
+    background: var(--color-ink);
+  }
+  .video-facade__play {
+    display: grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: var(--color-accent-ink);
+    font-size: 1.25rem;
+  }
+  .video-frame iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+}

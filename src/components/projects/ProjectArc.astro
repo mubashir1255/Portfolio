@@ -1,0 +1,64 @@
+---
+/** A featured project: a "story arc" with a Problem → Build → Result strip, demo video and diagram slots. */
+import Panel from '@/components/ui/Panel.astro';
+import ImageSlot from '@/components/ui/ImageSlot.astro';
+import ProjectLinks from './ProjectLinks.astro';
+import VideoSlot from './VideoSlot.astro';
+import type { Project } from '@/data/projects';
+
+interface Props {
+  project: Project;
+  arc: number;
+}
+
+const { project: p, arc } = Astro.props;
+const cs = p.caseStudy;
+const beats = cs ? ([['Problem', cs.problem], ['Build', cs.build], ['Result', cs.result]] as const) : [];
+const headingId = `project-${p.slug}-title`;
+---
+
+<Panel as="article" id={`project-${p.slug}`} class="project space-y-8 !p-5 sm:!p-8" data-categories={p.categories.join(' ')} aria-labelledby={headingId}>
+  <div class="grid gap-8 lg:grid-cols-[1.2fr_1fr]">
+    <ImageSlot image={p.image} alt={p.imageAlt} placeholder={`TODO: ${p.title} screenshot`} />
+    <div class="space-y-4">
+      <p class="kicker">Arc {String(arc).padStart(2, '0')} · {p.meta}</p>
+      <h3 id={headingId} class="display text-4xl sm:text-5xl">{p.title}</h3>
+      <p class="text-lg font-semibold">{p.summary}</p>
+      <ul class="prose-ink list-disc space-y-1 pl-5 text-[0.95rem]">
+        {p.points.map((pt) => <li>{pt}</li>)}
+      </ul>
+      <ul class="flex flex-wrap gap-2" aria-label="Built with">
+        {p.tech.map((t) => <li class="tag">{t}</li>)}
+      </ul>
+      <ProjectLinks project={p} size="default" />
+    </div>
+  </div>
+
+  {
+    cs && (
+      <>
+        <ol class="case-strip" aria-label={`${p.title} case study`}>
+          {beats.map(([label, text], i) => (
+            <li class="panel !p-4">
+              <p class="case-strip__label">
+                <span>{String(i + 1).padStart(2, '0')}</span>
+                {label}
+              </p>
+              <p class="mt-1 text-[0.95rem] text-ink-soft">{text}</p>
+            </li>
+          ))}
+        </ol>
+        <div class="grid gap-6 md:grid-cols-2">
+          <figure class="space-y-2">
+            <VideoSlot url={cs.video} title={p.title} />
+            <figcaption class="text-sm font-semibold text-ink-soft">Demo video</figcaption>
+          </figure>
+          <figure class="space-y-2">
+            <ImageSlot image={cs.diagram} alt={`${p.title} architecture diagram`} placeholder="TODO: architecture diagram" ratio={cs.diagram ? "16 / 9" : "3 / 1"} />
+            <figcaption class="text-sm font-semibold text-ink-soft">Architecture</figcaption>
+          </figure>
+        </div>
+      </>
+    )
+  }
+</Panel>

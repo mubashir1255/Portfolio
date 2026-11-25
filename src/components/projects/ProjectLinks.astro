@@ -1,0 +1,17 @@
+---
+import Button from '@/components/ui/Button.astro';
+import type { Project } from '@/data/projects';
+
+interface Props {
+  project: Project;
+  size?: 'default' | 'small';
+}
+
+const { project: p, size = 'small' } = Astro.props;
+---
+
+<div class="flex flex-wrap items-center gap-3">
+  {p.links.demo && <Button href={p.links.demo} external size={size} sakuga="impact">Live demo<span class="sr-only">: {p.title}</span></Button>}
+  {p.links.source && <Button href={p.links.source} external size={size} variant="secondary" sakuga="impact">Source<span class="sr-only">: {p.title}</span></Button>}
+  {p.privateRepo && <span class="badge">Private repo</span>}
+</div>

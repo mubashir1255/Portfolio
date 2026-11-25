@@ -1,7 +1,0 @@
----
-import { CodeXml, Cloud, Sparkles, ShieldCheck, Database, Rocket } from '@lucide/astro';
-interface Props { name: string; class?: string }
-const map = { code: CodeXml, cloud: Cloud, sparkles: Sparkles, shield: ShieldCheck, database: Database, rocket: Rocket };
-const Cmp = map[Astro.props.name as keyof typeof map] ?? Sparkles;
----
-<Cmp class={Astro.props.class} />
