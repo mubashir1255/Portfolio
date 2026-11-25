@@ -78,6 +78,9 @@ const engaged = new Promise<void>((resolve) => {
   events.forEach((e) => addEventListener(e, go, opts));
 });
 
+/** Resolves on the visitor's first interaction; shared with the entrance motion (motion.ts). */
+export const whenEngaged = () => engaged;
+
 const loaded = new Map<string, Promise<void>>();
 
 function loadFile(file: string) {
