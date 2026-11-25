@@ -9,7 +9,7 @@ import asaanUdhaar from '@/assets/projects/asaan-udhaar.jpg';
 import devEverTools from '@/assets/projects/devevertools.jpg';
 import qevoraTech from '@/assets/projects/qevora-tech.jpg';
 
-export type Category = 'Web' | 'AI' | 'Security' | 'Desktop';
+export type Category = 'Web' | 'AI' | 'Security' | 'Desktop' | 'Hardware';
 
 export interface CaseStudy {
   problem: string;
@@ -199,6 +199,30 @@ export const projects: Project[] = [
     links: { source: 'https://github.com/mubashir1255/Animal-Classifier-AI' },
   },
   {
+    slug: 'maze-robot',
+    title: 'Maze-Solving Robot',
+    meta: 'Hardware prototype',
+    summary: 'A robot that reads its surroundings through sensors and finds its own way through a maze, deciding in real time.',
+    points: [],
+    tech: ['Embedded systems', 'Sensors', 'Control logic'], // TODO: Mubashir to add the board/parts used
+    categories: ['Hardware'],
+    image: undefined, // TODO: Mubashir to add a photo of the robot
+    imageAlt: 'The maze-solving robot',
+    links: {},
+  },
+  {
+    slug: 'metal-detector',
+    title: 'Metal Detector',
+    meta: 'Hardware prototype',
+    summary: 'A separate prototype that detects metal: the same sensor-and-logic approach, a different problem.',
+    points: [],
+    tech: ['Embedded systems', 'Sensors', 'Control logic'], // TODO: Mubashir to add the board/parts used
+    categories: ['Hardware'],
+    image: undefined, // TODO: Mubashir to add a photo of the detector
+    imageAlt: 'The metal detector prototype',
+    links: {},
+  },
+  {
     slug: 'portfolio',
     title: 'This portfolio',
     meta: 'Manga Volume edition',
@@ -217,7 +241,7 @@ export const otherProjects = projects.filter((p) => !p.featured);
 
 /** Filter tabs: a category gets a tab only when at least 2 projects carry it. */
 const MIN_PER_TAB = 2;
-const order: Category[] = ['Web', 'AI', 'Security', 'Desktop'];
+const order: Category[] = ['Web', 'AI', 'Security', 'Desktop', 'Hardware'];
 export const projectCategories = order.filter(
   (c) => projects.filter((p) => p.categories.includes(c)).length >= MIN_PER_TAB,
 );

@@ -2,7 +2,12 @@
 import Layout from '@/layouts/Layout.astro';
 import Nav from '@/components/Nav.astro';
 import Hero from '@/components/Hero.astro';
+import ExperienceChapter from '@/components/chapters/ExperienceChapter.astro';
 import ProjectsChapter from '@/components/projects/ProjectsChapter.astro';
+import SkillsChapter from '@/components/chapters/SkillsChapter.astro';
+import JourneyChapter from '@/components/chapters/JourneyChapter.astro';
+import ContactChapter from '@/components/chapters/ContactChapter.astro';
+import Footer from '@/components/Footer.astro';
 import { person } from '@/data/site';
 ---
 
@@ -13,8 +18,11 @@ import { person } from '@/data/site';
   <Nav />
   <main id="main">
     <Hero />
-    <!-- Phase 4: Chapter 01 Experience goes here -->
+    <ExperienceChapter />
     <ProjectsChapter />
-    <!-- Phase 4: Skills, Journey, Contact, footer -->
+    <SkillsChapter />
+    <JourneyChapter />
+    <ContactChapter />
   </main>
+  <Footer />
 </Layout>

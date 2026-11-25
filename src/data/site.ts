@@ -5,6 +5,7 @@ export const person = {
   role: 'Full Stack Developer · Cloud · AI · Security',
   pitch: 'I build web apps that work in the real world — offline, in Urdu, on everyday phones — and I keep them secure.',
   degree: 'BS IET',
+  degreeFull: 'BS Information Engineering Technology (IET)',
   university: 'University of Lahore',
   location: 'Pakistan · open to remote worldwide',
   /** "Coding since" stat */
