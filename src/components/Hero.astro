@@ -10,6 +10,7 @@ import { now } from '@/data/now';
 import { stats } from '@/data/stats';
 import { featuredProjects } from '@/data/projects';
 import { withBase } from '@/lib';
+import avatar from '@/assets/avatar.jpg';
 
 ---
 
@@ -52,7 +53,7 @@ import { withBase } from '@/lib';
 
     <div class="grid items-start gap-8 sm:grid-cols-[minmax(0,15rem)_1fr] lg:grid-cols-1 lg:justify-items-end">
       <Panel as="figure" tilt="right" class="w-full max-w-[13rem] !p-3 sm:max-w-none lg:max-w-[17rem]">
-        <ImageSlot alt="Manga-style portrait of Mubashir" placeholder="TODO: Mubashir's manga avatar" ratio="1 / 1" loading="eager" />
+        <ImageSlot image={avatar} alt="Portrait of Mubashir Fayyaz" ratio="1 / 1" priority sizes="(min-width: 1024px) 272px, (min-width: 640px) 240px, 208px" class="avatar-ink" />
       </Panel>
       <Panel as="aside" tone="ink" aria-labelledby="now-title" class="w-full">
         <h2 id="now-title" class="kicker">Now</h2>

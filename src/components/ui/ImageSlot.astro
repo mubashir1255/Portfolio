@@ -15,16 +15,18 @@ interface Props {
   ratio?: string;
   sizes?: string;
   loading?: 'lazy' | 'eager';
+  /** above-the-fold hero image: load eagerly and ahead of other images */
+  priority?: boolean;
   class?: string;
 }
 
-const { image, alt, placeholder = 'TODO: add image', ratio = '16 / 10', sizes = '(min-width: 768px) 640px, 100vw', loading = 'lazy', class: cls } = Astro.props;
+const { image, alt, placeholder = 'TODO: add image', ratio = '16 / 10', sizes = '(min-width: 768px) 640px, 100vw', loading = 'lazy', priority = false, class: cls } = Astro.props;
 ---
 
 {
   image ? (
     <div class:list={['frame halftone--hover', cls]} style={`aspect-ratio: ${ratio}`}>
-      <Image src={image} alt={alt} widths={[400, 800, 1200]} sizes={sizes} loading={loading} format="webp" />
+      <Image src={image} alt={alt} widths={[400, 800, 1200]} sizes={sizes} loading={priority ? 'eager' : loading} fetchpriority={priority ? 'high' : undefined} format="webp" />
     </div>
   ) : (
     <div class:list={['frame slot halftone', cls]} style={`aspect-ratio: ${ratio}`} role="img" aria-label={`Image coming soon: ${alt}`}>

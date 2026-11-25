@@ -1019,3 +1019,10 @@ sakuga-tabs {
     background: var(--color-paper-deep);
   }
 }
+
+/* ── Avatar: black & white to match the ink palette (remove the filter for colour) ── */
+@layer components {
+  .avatar-ink img {
+    filter: grayscale(1) contrast(1.15);
+  }
+}
